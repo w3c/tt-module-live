@@ -1,0 +1,18 @@
+<tt xmlns:ebuttp="urn:ebu:tt:parameters" xmlns="http://www.w3.org/ns/ttml" … xml:lang="en" ttp:cellResolution="40 24" ttp:clockMode="local" ttp:timeBase="clock" ebuttm:authoringDelay="5s" ebuttp:sequenceIdentifier="testSequence_1441882303" ebuttp:sequenceNumber="1858107">
+   <head>
+     <styling>
+       <style xml:id="s1" tts:backgroundColor="black" tts:color="lime" tts:fontSize="1c 2c"/>
+     </styling>
+     <layout>
+       <region xml:id="r0" tts:extent="37c 4c" tts:origin="3c 20c"/>
+     </layout>
+   </head>
+   <body begin="10:29:32.36">
+     <div>
+       <p region="r0">
+         <span style="s1"> Hello. Have you not done something <br/>
+ you should have done, for me? </span>
+       </p>
+     </div>
+   </body>
+</tt>
