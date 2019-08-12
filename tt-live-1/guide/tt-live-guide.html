@@ -8,7 +8,8 @@
      class='remove'></script>
     <script class='remove'>
       var respecConfig = {
-        specStatus: "ED"
+        specStatus: "WG-NOTE"
+        , noRecTrack: true
         , processVersion: "2019"
         , editors: [{
           name: "Nigel Megitt",
@@ -52,7 +53,10 @@
   <body>
     <section id='abstract'>
       <p>
-        This submission defines constraints and extensions to TTML
+        This document informatively describes and elaborates
+        the constraints and extensions to TTML
+        defined by the TTML Live Extensions Module v1.
+        The functionality described is intended 
         to support the contribution
         of real time streams of content,
         primarily subtitles and captions,
@@ -60,9 +64,8 @@
         via a controlled network
         to an encoder
         whose output is intended for wider distribution.
-        It also defines a system model including <em>nodes</em>,
-        <em>sequences</em> and <em>streams</em> useful for modelling
-        such systems.
+        It makes use of a system model including <em>nodes</em>,
+        <em>sequences</em> and <em>streams</em>.
         The primary use case is the transfer of
         live subtitles and captions
         within a broadcast or media preparation
@@ -70,21 +73,7 @@
       </p>
       <p>
         This document is an abridged version of [[EBU-TT-Live-1-0]]
-        where some informative information has been removed, and
-        the normative requirements have been re-based on [[TTML1]]
-        where in the original they were based on the [[EBU-TT-1-2]]
-        profile of TTML1.
-      </p>
-      <p>
-        No requirement is presented here for any
-        subtitle presentation device used by an audience member
-        to behave differently in the presence of live subtitles
-        compared to prepared subtitles:
-        rather, it is envisaged that any processing required
-        to manage the two cases,
-        and the transitions between them,
-        occurs in the broadcaster domain.
-        However the use of SMPTE time code is not supported.
+        where normative information has been removed.
       </p>
       <p>
         These extensions are based on [[EBU-TT-Live-1-0]]
@@ -102,8 +91,9 @@
     <section id="scope">
       <h2>Scope</h2>
       <p>
-        This submission defines extensions to TTML
-        to support the contribution
+        This document elaborates the
+        TTML Live module extensions to TTML
+        that support the contribution
         of real time streams of content,
         primarily subtitles and captions,
         from an authoring or playout system
@@ -128,29 +118,29 @@
         to an encoder
         prior to distribution,
         via intermediate processing units.
-        It does this by specifying:
+        It explains further the specified:
       </p>
       <ul>
         <li>
-          a system model consisting of processing nodes
+          system model consisting of processing nodes
           that pass streams of subtitles along a chain;
         </li>
         <li>
-          a content profile specifying the data format of each document
+          content profile specifying the data format of each document
           in a live subtitle stream;
         </li>
         <li>
-          a mechanism by which content providers can
+          mechanism by which content providers can
           model and potentially improve synchronisation
           between the subtitles and the audio to which they relate;
         </li>
         <li>
-          a mechanism for interoperable management of the
+          mechanism for interoperable management of the
           handover from one subtitler to the next,
           to generate a single output subtitle stream.
         </li>
         <li>
-          an extension facility to allow other types of
+          extension facility to allow other types of
           live documents to be defined in future specifications,
           for example for passing messages between subtitlers.
         </li>
@@ -158,69 +148,18 @@
       <p>
         The mechanisms by which such streams of TTML are carried are out of
         scope of this document; however the requirements for any specification
-        of such a mechanism are included.
+        of such a mechanism are specified by the TTML Live Extensions Module.
       </p>
     </section> <!-- scope -->
 
-    <section id="conformance">
+    <section>
+      <h2>Conformance</h2>
       <p>
-        Normative text describes indispensable or mandatory elements.
-        It contains the conformance keywords ‘shall’,
-        ‘should’ or ‘may’, defined as follows:
-      </p>
-      <p>
-        <dfn>Shall</dfn>
-        and
-        <dfn>shall not</dfn>:
-        Indicate requirements to be followed strictly
-        and from which no deviation is permitted
-        in order to conform to the document.
-      </p>
-      <p>
-        <dfn>Should</dfn>
-        and
-        <dfn>should not</dfn>:
-        Indicate that, among several possibilities,
-        one is recommended as particularly suitable,
-        without mentioning or excluding others;
-        OR indicate that a certain course of action is
-        preferred but not necessarily required;
-        OR indicate that (in the negative form)
-        a certain possibility or course of action
-        is deprecated but not prohibited.
-      </p>
-      <p>
-        <dfn>May</dfn>
-        and
-        <dfn>need not</dfn>:
-        Indicate a course of action permissible
-        within the limits of the document.
-      </p>
-      <p>
-        <dfn>Default</dfn>
-        identifies mandatory (in phrases containing “shall”)
-        or recommended
-        (in phrases containing “should”) presets that can,
-        optionally, be overwritten by user action
-        or supplemented with other options in advanced applications.
-        Mandatory defaults must be supported.
-        The support of recommended defaults is preferred,
-        but not necessarily required.
-      </p>
-      <p>
-        Informative text is potentially helpful to the user,
-        but it is not indispensable
-        and it does not affect the normative text.
-        Informative text does not contain any conformance keywords.
-      </p>
-      <p>
-        A conformant implementation is one which
-        includes all mandatory provisions (‘shall’)
-        and, if implemented,
-        all recommended provisions (‘should’) as described.
-        A conformant implementation need not implement
-        optional provisions (‘may’)
-        and need not implement them as described.
+        This document is purely informative. 
+        All normative requirements are
+        defined in the TTML Live Extensions Module. 
+        Any language that happens to be coincident with 
+        conformance language is not intended as such.
       </p>
     </section> <!-- conformance -->
 
@@ -467,9 +406,13 @@
     </section> <!-- intro-scenarios -->
   </section> <!-- introduction -->
 
-  <section id="terms">
+  <section id="terms" class="informative">
     <h2>Terms and Definitions</h2>
 
+    <p>The terms and definitions are as defined in the 
+      TTML Live Extensions Module, reproduced here for convenience.
+    </p>
+    
     <p>
       <dfn>Author</dfn>
       a person or system that creates a stream
@@ -521,7 +464,7 @@
         This term is used in the same sense as "resolved begin time" is used
         in [[SMIL3]],
         when applied to a document and is further defined in
-        <a href="#document-resolved-begin-time"></a>.
+        the TTML Live Extensions Module</a>.
       </p>
     </div>
 
@@ -533,7 +476,7 @@
       <p class="note">
         This term is used in the same sense as "resolved end time" is used in
         [[SMIL3]] when applied to a document and is further defined in
-        <a href="#document-resolved-end-time"></a>.
+        the TTML Live Extensions Module</a>.
       </p>
     </div>
     
@@ -581,7 +524,7 @@
 
     <p>
       <dfn>Presentation Processor</dfn>
-      as defined in [[!TTML1]]: 
+      as defined in [[TTML1]]: 
       <blockquote>
         A Content Processor which purpose is
         to layout, format, and render,
@@ -598,7 +541,7 @@
 
     <p>
       <dfn>Root Temporal Extent</dfn>
-      As defined in [[!TTML1]].
+      As defined in [[TTML1]].
     </p>
     
     <p>
@@ -666,376 +609,7 @@
 
   </section> <!-- terms -->
 
-  <section id="system-model">
-    <h2>System Model</h2>
-    <p>
-      This section defines an abstract system model; 
-      systems that are conformant with this specification 
-      shall meet the requirements within the system model
-      , <a href="#document-conformance"></a> 
-      and <a href="#node-conformance"></a>.
-    </p>
-    <section id="system-model-documents">
-      <h3>Documents</h3>
-      <ul>
-        <li>
-          A <a>document</a> is a single entity conformant to this specification.
-        </li>
-        <li>
-          <a>Documents</a> defined by this specification are
-          <a>live documents</a> in the set of <a>TTML Live Documents</a>.
-        </li>
-        <li>
-          An <dfn>implicitly timed document</dfn> is
-          a <a>document</a> that contains no timing information
-          and is considered active as soon as it has become available.
-          It may also express a maximum duration
-          after which it shall be deactivated.
-        </li>
-        <li>
-          An <dfn>explicitly timed document</dfn> is
-          a <a>document</a> that contains timing information
-          and whose activation time depends both on
-          when it has become available
-          and the timing information that it contains,
-          resolved using its time base and a reference clock source.
-        </li>
-        <li>
-          When presenting a <a>sequence</a> of <a>documents</a>,
-          at each moment in time
-          exactly zero or one <a>document</a>
-          shall be active.
-        </li>
-        <li>
-          If no <a>document</a> is active,
-          or if a <a>document</a> with no content is active,
-          no content shall be displayed.
-        </li>
-        <li>
-          <p>
-            Two document instances are considered 
-            <dfn data-lt="identical">identical</dfn> if 
-            the result of the <code>fn:deep-equal</code> function 
-            [[xpath-functions-30]] is <code>true</code> 
-            when both document instances are provided as operands. 
-          </p>
-          <p class="note">
-            For valid serialised XML documents 
-            if a byte comparison of the two documents shows 
-            they are identical then <code>deep-equal</code> 
-            is expected also to return <code>true</code>, 
-            however there are cases where serialisations 
-            are not identical in a byte comparison but 
-            <code>deep-equal</code> correctly reports that 
-            they are identical, 
-            for example if XML comments have been added 
-            or attributes have been reordered.</li>
-      </ul>
-    </section> <!-- system-model-documents -->
-
-    <section id="system-model-sequences">
-      <h3>Sequences</h3>
-      <ul>
-        <li>
-          A <a>sequence</a> is a set of related <a>live documents</a>,
-          for example the <a>documents</a> that define the subtitles
-          for a single programme.
-        </li>
-        <li>
-          <a>Sequences</a> shall be considered <dfn>distinct</dfn>
-          if they have had processing applied,
-          even if the result of that processing is
-          no change other than a known difference in quality,
-          for example if the processing has
-          checked the spelling of the text content.</li>
-        <li>
-          Every <a>distinct</a> <a>sequence</a> shall have
-          a unique <a>sequence identifier</a>. </li>
-        <li>
-          A <a>sequence</a> of <a>implicitly timed documents</a>
-          can be transformed,
-          with knowledge of the documents’ associated availability times,
-          into a sequence of <a>explicitly timed documents</a>
-          or a single <a>document</a> with explicit timings.
-        </li>
-        <li>
-          Every <a>document</a> shall be associated with
-          exactly one <a>sequence</a>
-          and shall contain a <a>sequence identifier</a>.
-        </li>
-        <li>
-          <a>Sequences</a> do not have an explicit existence
-          other than being the set of their constituent <a>live documents</a>;
-          the <a>sequence identifier</a>
-          shall be present within every <a>document</a>
-          in order to make concrete the association with the
-          document's <a>sequence</a>.
-        </li>
-        <li>
-          <p>
-            Every <a>document</a> shall contain a <a>sequence number</a>. 
-            Sequence numbers shall increase with the passage of time 
-            for each new document that is made available. 
-            Sequence numbers are used to resolve temporal overlaps: 
-            see <a href="#document-resolved-times"></a>.
-            In case a document is received with
-            the same <a>sequence identifier</a> 
-            and <a>sequence number</a> as a previously received document 
-            the later received document shall be discarded from processing. 
-          </p>
-          <p class="note">
-            If <a>sequence numbers</a> begin at 1 then, 
-            at an example nominal mean rate of 1 document per second 
-            the maximum sequence number that will fit within a 4 byte 
-            unsigned integer corresponds to a sequence duration of 
-            over 136 years. 
-            Nevertheless <a>sequences</a> should begin at low sequence numbers 
-            such as 1 to avoid the possibility of an 
-            unwanted integer overflow.
-          </p>
-          </li>
-        <li>
-          <p>
-            Every <a>document</a> in a <a>sequence</a> is by definition a valid 
-            and self contained document conforming to this specification. 
-          </p>
-          <p class="note">
-            In general no knowledge of other <a>documents</a>
-            is required to process it.
-          </p>
-          <p class="note">
-            Some specific kinds of processor may constitute exceptions, 
-            such as one that accumulates multiple documents together 
-            and combines them into a single one.
-          </p>
-          <p class="note">
-            For the purposes of efficiency, 
-            a <a>processing node</a> may store the preceding <a>document</a>
-            for document comparison, 
-            e.g. when a subsequent document only changes 
-            the temporal validity of the document content.
-          </p>
-        </li>
-        <li>
-          <a>Sequences</a> may be stored:
-          that is, the lifetime of the sequence is unbounded.
-        </li>
-      </ul>
-      <p>
-        Every <a>document</a> in a <a>sequence</a>
-        shall have the same timing model 
-        as defined by using the same set of 
-        specified or absent values for the 
-        <code>ttp:timeBase</code> 
-        and <code>ttp:clockMode</code> attributes.
-      </p>
-    </section> <!-- system-model-sequences -->
-
-    <section id="system-model-nodes-and-streams">
-      <h3>Nodes and streams</h3>
-      <ul>
-        <li>
-          A <a>node</a> is a TTML Live aware unit or mechanism that creates, 
-          emits, receives or processes one or more <a>sequences</a>.
-        </li>
-        <li>
-          <p>
-            <a>Nodes</a> are identified.
-          </p>
-          <p class="note">
-            The format of <a>node identifiers</a> is not defined here.
-          </p>
-        </li>
-        <li>
-          A <a>node</a> may offer a <a>logical stream</a> as the transfer 
-          of a <a>sequence</a> to one or more <a>nodes</a>. 
-          A logical stream is identified by 
-          the source node’s <a>node identifier</a>
-          and the <a>sequence identifier</a>.
-        </li>
-        <li>
-          A <a>physical stream</a> is the transfer of
-          a <a>sequence</a> between two <a>nodes</a>. 
-          It is identified by the pair of <a>node identifiers</a> of 
-          the source node 
-          and the destination node 
-          and by the <a>sequence identifier</a>.
-        </li>
-        <li>
-          <p>
-            Any number of <a>nodes</a> may process 
-            or consume the same <a>logical stream</a>: 
-            by definition the delivery of those streams requires 
-            one <a>physical stream</a> per destination node.
-          </p>
-          <p class="note">
-            A <a>node</a> can provide multiple <a>physical streams</a>
-            of the same <a>sequence</a>.
-          </p>
-        </li>
-        <li>
-          <p>
-            A <a>processing node</a> emits <a>sequence</a>(s) that 
-            are <a>distinct</a> from any of its input sequence(s). 
-            A <dfn>creation node</dfn> is a specialised <a>processing node</a>
-            with zero input sequences.
-          </p>
-          <p class="note">
-            There can be little or no observable difference in content 
-            but the <a>processing node</a> has the <em>potential</em> to modify 
-            the output <a>stream</a>; 
-            for example a spell checker 
-            or profanity removal node might 
-            not make any changes most of the time 
-            but be called into action on an occasional basis. 
-            Nevertheless the output is considered 
-            to be different from the input 
-            because it has a logically different state, 
-            for example if it is known not to contain any profanities, 
-            and it is required to have a different <a>sequence identifier</a>.
-          </p>
-        </li>
-        <li>
-          <p>
-            A <a>passive node</a> shall not modify input <a>sequences</a>
-            and shall only emit sequences that are <a>identical</a>
-            (including the <a>sequence numbers</a>) 
-            to the input sequence(s), 
-            for example nodes that are simply used for switching. 
-            A <a>consumer node</a> is a specialised passive node 
-            that does not emit any sequence.
-          </p>
-          <p class="note">
-            The outputs of a <a>consumer node</a> that is an encoder are
-            not <a>TTML Live documents</a>.
-          </p>
-        </li>
-        <li>
-          <a>Streams</a> are transient: 
-          that is, the lifetime of a stream is bounded by 
-          the period between the start of transfer 
-          (when the first <a>document</a> is transferred) 
-          and the end of transfer (when the last <a>document</a> is transferred). 
-          Streams may begin before the last document in the sequence 
-          has been generated - indeed it is envisaged that 
-          in normal operation <a>documents</a> within a <a>sequence</a>
-          are generated dynamically 
-          and transferred in a stream with an undefined end time.
-        </li>
-        <li>
-          <p>
-            The flow of a <a>stream</a> is unidirectional. 
-            Any ‘back channel’ reverse communication 
-            is external to the payload of the <a>sequence</a>.
-          </p>
-          <p class="note">
-            <a>Nodes</a> can subscribe to multiple <a>streams</a>;
-            see the <a>Handover Manager</a> node at 
-            <a href="#handover"></a> for example.
-          </p>
-        </li>
-        <li>
-          <p>
-            At any moment in the presentation 
-            of a <a>sequence</a> by a <a>node</a>
-            exactly zero or one <a>document</a>
-            in that <a>sequence</a> shall be temporally active.
-          </p>
-          <p class="note">
-            The logic defining which <a>document</a> is temporally active 
-            is defined in <a href="#document-resolved-times"></a>.
-          </p>
-        </li>
-      </ul>
-      <p>
-        <a>Nodes</a> are defined as abstract classes. 
-        Further detail of node behaviour is defined in 
-        <a href="#node-conformance"></a>.
-        See also <a href="#node-classes-figure"></a>.
-      </p>
-      <p>
-        For correct temporal processing of <a>streams</a>,
-        <a>nodes</a> are expected to maintain synchronisation between
-        internal clocks used to compare documents’ availability times
-        with the computed times for the <a>documents</a>’ contents.
-      </p>
-      <p class="note">
-        The use of SMPTE time base is prohibited.
-        This is because the combination of 
-        <code>ttp:timeBase="smpte"</code> and 
-        <code>ttp:markerMode="discontinuous"</code>
-        implies that time expressions are merely markers
-        that cannot be relied upon to increase monotonically.
-        Therefore they are unsuitable for direct comparison purposes,
-        which is a processing requirement
-        for identifying temporal overlaps between <a>documents</a>.
-        In practice any source of SMPTE timecode,
-        for example timecode associated with video frames,
-        even if intended to be continuous,
-        can be subject to discontinuities
-        for example at programme boundaries.
-        Techniques for working around the absence
-        of SMPTE time base are described in
-        <a href="#document-resolved-times"></a>.
-      </p>
-      <p>
-        <a href="#system-classes-figure"></a> shows a UML class model
-        illustrating the logical entities in this system model.
-      </p>
-      <figure id="system-classes-figure">
-        <img src="images/system-uml-model.svg" alt="">
-        <figcaption>
-          UML model showing system model logical entities
-        </figcaption>
-      </figure>
-      <p class="note">
-        It is envisaged that some <a>processing nodes</a>
-        will be purely software whereas others require human intervention.
-      </p>
-      <p>
-        <a>Sequence identifiers</a> should not
-        be used as <a>service identifiers</a>,
-        such as broadcast television channel identifiers.
-        For example consider the case of a ‘simulcast’
-        where a single video source is broadcast
-        on more than one output service simultaneously,
-        perhaps to support localised services or
-        both standard definition
-        and high definition video services,
-        with the same audio.
-        A subtitler can only observe
-        a single media source at any moment,
-        and generates a single <a>sequence</a> with
-        a single <a>sequence identifier</a>,
-        which could be subsequently processed,
-        generating new sequences with different identifiers.
-        Those sequences could be destined
-        to be encoded for multiple output or destination services.
-        Destination service identifiers may be carried
-        as metadata within documents.
-        Similarly the observed source <a>service identifier</a>
-        may be carried as metadata within documents.
-      </p>
-
-      <section id="system-model-other-live-documents">
-        <h4>Other live documents</h4>
-        <p>
-          The definition of <a>sequence</a> deliberately allows for
-          the possible future introduction of other kinds of
-          <a>TTML Live document</a>
-          than the document type specified here.
-        </p>
-        <p>
-          Implementations of TTML Live <a>nodes</a> should be designed
-          to accommodate other <a>live documents</a>.
-        </p>
-      </section> <!-- system-model-other-live-documents -->
-
-    </section> <!-- system-model-nodes-and-streams -->
-
-  </section> <!-- system-model -->
-
-  <section id="timing-and-synchronisation">
+  <section id="timing-and-synchronisation" class="informative">
     <h2>Timing and synchronisation</h2>
     <p>
       This section defines the temporal processing
@@ -1160,7 +734,7 @@
         </p>
         <ol>
           <li>
-            Use <a>implicitly timed documents</a> only,
+            Use implicitly timed documents only,
             with the functional limitations implied;
           </li>
           <li>
@@ -1257,67 +831,23 @@
           however it is used when computing the
           <a>document resolved end time</a> relative to the 
           <a>document resolved begin time</a>; see
-          <a href="#document-resolved-end-time"></a>.
+          <a>Document resolved end time</a>.
         </p>
 
         <p class="note">
           See [[EBU-TT-Live-1-0]] Annex B for informative worked examples.
         </p>
 
-        <section id="document-resolved-begin-time">
-          <h4>Document resolved begin time</h4>
+        <p class="ednote">Bring the worked examples into this document.</p>
 
-          <p>
-            The <a>document resolved begin time</a> shall be the later of
-            (a) the <a>document availability time</a>,
-            (b) the <a>earliest computed begin time</a> in the document and
-            (c) any externally specified document activation begin time,
-            such as the beginning of sequence presentation.
-          </p>
+        <p>
+          The TTML Live Extensions Module defines the
+          <a>document resolved begin time</a> and the
+          <a>document resolved end time</a> 
+          in accordance with these rules.
+        </p>
 
-          <p class="note">
-            See [[EBU-TT-Live-1-0]] Annex C for informative worked examples.
-          </p>
-
-        </section> <!-- document-resolved-begin-time -->
-
-        <section id="document-resolved-end-time">
-          <h4>Document resolved end time</h4>
-
-          <p>
-            The <a>document resolved end time</a> shall be the earlier of
-            (a) the earliest <a>document resolved begin time</a> of
-            all available <a>documents</a> in the sequence
-            with a greater <a>sequence number</a>,
-            (b) if and only if the <code>dur</code> attribute is present
-            on the <code>tt:body</code> element,
-            the <a>document resolved begin time</a>
-            plus the value of the <code>dur</code> attribute,
-            (c) the <a>latest computed end time</a> in the document and
-            (d) any externally specified document deactivation time,
-            such as the end of sequence presentation.
-          </p>
-
-          <p class="note">
-            See [[EBU-TT-Live-1-0]] Annex C for informative worked examples.
-          </p>
-
-        </section> <!-- document-resolved-end-time -->
-
-        <section id="when-no-document-active">
-          <h4>Behaviour when no document is active</h4>
-
-          <p>
-            When no <a>document</a> is active a presentation processor
-            shall not render any content.
-          </p>
-
-          <p class="note">
-            An <a>encoder</a> can be considered to be a specialised type
-            of presentation processor.
-            More generally, this applies to any <a>consumer node</a>.
-          </p>
-        </section> <!-- when-no-document-active -->
+        <p class="ednote">Bring in the worked examples from EBU-TT Live Annex C.</p>
 
         <section id="issuing-strategies" class="informative">
           <h4>Document creation and issuing strategies</h4>
@@ -1329,6 +859,9 @@
             See [[EBU-TT-Live-1-0]] § 2.3.1.4 for discussion of some of
             the possible strategies and their potential usage.
           </p>
+
+          <p class="ednote">Bring in issuing strategies text from EBU-TT Live § 2.3.1.4.</p>
+
         </section> <!-- issuing strategies -->
 
         <section id="implementation-considerations" class="informative">
@@ -1362,7 +895,7 @@
               For example some <a>passive nodes</a> need
               to keep only a transient set of <a>documents</a>,
               since it is not expected to do more than minimal buffering,
-              say for the time it takes for a <a>distributing node</a>
+              say for the time it takes for a distributing node
               to emit each received <a>document</a> to all subscribers.
             </p>
 
@@ -1371,14 +904,14 @@
               depending on what they are doing.
               A <a>delay node</a> needs to keep <a>documents</a> for at least
               the <a>offset period</a> by which it is applying a delay.
-              The <a>retention semantics</a> for <a>improver nodes</a>
-              or <a>synthesiser nodes</a>
+              The <a>retention semantics</a> for improver nodes
+              or synthesiser nodes
               need to be defined based on the functions that
               they are designed to perform.
             </p>
 
             <p>
-              <a>Consumer nodes</a> similarly need to
+              Consumer nodes similarly need to
               have some kind of defined <a>retention semantics</a>.
               One useful strategy for an <a>encoder</a> is
               to discard everything that has already been encoded
@@ -1404,9 +937,9 @@
             <p>
               Consider a simple system in which
               a subtitler authors explicitly timed subtitles using a
-              <a>Producer Node</a>, and
+              Producer Node, and
               the resulting <a>sequence</a> is streamed immediately
-              to a <a>Consumer node</a>,
+              to a Consumer node,
               for example to encode into a downstream format
               (<a href="#simple-use-case-1-figure"></a>).
             </p>
@@ -1419,7 +952,7 @@
             </figure>
 
             <p>
-              If the <a>producer node</a> issues <a>documents</a>
+              If the producer node issues <a>documents</a>
               with the intent of them being presented immediately,
               and therefore specifies a begin time equal to
               its perceived time ‘now’
@@ -1454,7 +987,7 @@
               <img src="images/time-graph-explicitly-timed-documents.svg" alt="">
               <figcaption>
                 Diagram showing resolved begin and end times
-                for <a>explicitly timed documents</a>
+                for explicitly timed documents
               </figcaption>
             </figure>
 
@@ -1468,9 +1001,9 @@
               and the two nodes are in fact
               not synchronised relative to each other.
               For example, if a <a>document</a>’s duration is 1s
-              but the <a>consumer node</a>’s clock runs
+              but the consumer node’s clock runs
               1s or more later than the
-              <a>producer node</a>’s clock,
+              producer node’s clock,
               then even if the real D<sub>at</sub> were 0,
               the consumer node would consider it to be 1s late
               and the document’s content would never be consumed.
@@ -1497,8 +1030,8 @@
                     <code>fn:deep-equals</code> comparison of XML elements;
                     therefore two otherwise similar documents that
                     contain different comments are considered
-                    to be <a>identical</a> by the test defined in
-                    <a href="#system-model"></a>.
+                    to be identical by the test defined in
+                    the System Model</a>.
                     As a result, <a>passive nodes</a> can
                     add such comments without breaking
                     passive node conformance requirements.
@@ -1555,7 +1088,7 @@
                 </p>
                 <p class="note">
                   This scenario only applies to
-                  <a>explicitly timed documents</a>,
+                  explicitly timed documents,
                   and a <a>Retiming Delay node</a> that performs this function
                   is not expected both to adjust document times
                   <em>and</em> to delay emission of the adjusted documents,
@@ -1596,6 +1129,8 @@
         [[EBU-TT-M]] can be used to express the latency associated with the
         authoring process.
       </p>
+
+      <p class="ednote">Bring in delay management text from EBU-TT Live §2.3.2 and §2.3.3.</p>
     </section> <!-- management-of-delay -->
 
     <section id="delay-nodes">
@@ -1658,7 +1193,7 @@
             of the documents received by <a>Nodes</a> receiving the sequence
             (downstream).
             It is primarily intended for delaying
-            <a>implicitly timed documents</a>.</li>
+            implicitly timed documents.</li>
         <li>
           A <a>Retiming Delay Node</a> modifies the times
           within each <a>Document</a>
@@ -1670,7 +1205,7 @@
           the computed begin and end times within the document
           are increased by a non negative delay <a>offset period</a>.
           The Retiming Delay Node is primarily intended
-          for delaying <a>explicitly timed documents</a>.</li>
+          for delaying explicitly timed documents.</li>
       </ul>
       <div class="note">
         <p>
@@ -1698,7 +1233,7 @@
           <li>
             A <a>Buffer Delay node</a> is a <a>passive node</a>.
             Therefore the output documents shall
-            be <a>identical</a> to the input documents.</li>
+            be identical to the input documents.</li>
           <li>
             A <a>Buffer Delay node</a> shall 
             delay emission of the stream by a period
@@ -1741,8 +1276,8 @@
             being increased by the <a>offset period</a>.
             <p class="note">
               In general this results in
-              <a>implicitly timed documents</a> being converted
-              to <a>explicitly timed documents</a>,
+              implicitly timed documents being converted
+              to explicitly timed documents,
               since all but a zero <a>offset period</a> requires at a minimum
               a <code>begin</code> attribute on an element,
               for example the <code>tt:body</code> element.
@@ -1842,9 +1377,9 @@
 
   </section> <!-- timing-and-synchronisation -->
 
-  <section id="handover">
-    <h3>Handover</h3>
-    <p class="informative">
+  <section id="handover" class="informative">
+    <h2>Handover</h2>
+    <p>
       In a live subtitle authoring environment it is common practice for
       multiple subtitlers to collaborate with each other
       in the creation of subtitles for a single programme.
@@ -1865,7 +1400,7 @@
       It then emits a new <a>sequence</a> of <a>documents</a> representing
       the time interleaved combination of subtitles from each of the authors,
       where each output <a>document</a> is derived from
-      an input <a>document</a> from the <a>selected sequence</a>.
+      an input <a>document</a> from the selected sequence.
       See also <a href="#handover-sequences-figure"></a>
       for an example of handover sequences.
     </p>
@@ -1909,13 +1444,13 @@
       </p>
 
       <p>
-        The <a><code>ebuttp:authorsGroupIdentifier</code></a> is a string
+        The <code>ebuttp:authorsGroupIdentifier</code> is a string
         that identifies the group of authors
         from which a particular <a>Handover Manager</a> can choose.
         A <a>Handover Manager</a> should be configured
         to subscribe to all the <a>streams</a>
         whose <a>documents</a> have the same
-        <a><code>ebuttp:authorsGroupIdentifier</code></a>
+        <code>ebuttp:authorsGroupIdentifier</code>
         except for its own output stream.
         Within a single <a>sequence</a>,
         all <a>documents</a> that contain the element
@@ -1926,9 +1461,9 @@
       <p>
         The <a>Handover Manager</a> may include within each <a>document</a>
         in its output <a>sequence</a> the parameter attributes
-        <a><code>ebuttp:authorsGroupIdentifier</code></a> and
-        <a><code>ebuttp:authorsGroupControlToken</code></a>
-        from the current <a>selected sequence</a>.
+        <code>ebuttp:authorsGroupIdentifier</code> and
+        <code>ebuttp:authorsGroupControlToken</code>
+        from the current selected sequence.
         The <a>Handover Manager</a> includes within each output <a>document</a>
         the metadata attribute
         <code>ebuttm:authorsGroupSelectedSequenceIdentifier</code> [[EBU-TT-M]]
@@ -1947,12 +1482,12 @@
 
       <p>
         When present in a <a>document</a>,
-        the <a><code>ebuttp:authorsGroupControlToken</code></a> is a number
+        the <code>ebuttp:authorsGroupControlToken</code> is a number
         that the <a>Handover Manager</a> uses to identify which <a>sequence</a>
         to select: when a <a>document</a> is received with a higher value
-        <a><code>ebuttp:authorsGroupControlToken</code></a>
+        <code>ebuttp:authorsGroupControlToken</code>
         than that most recently received
-        in the current <a>selected sequence</a>
+        in the current selected sequence
         the <a>Handover Manager</a> switches to
         that <a>document</a>'s <a>sequence</a>,
         that is, it emits a <a>document</a> in its output <a>sequence</a>
@@ -1971,12 +1506,12 @@
         This means that the control token value can be lowered
         after taking control,
         by setting the control token value in a new document
-        in the <a>selected sequence</a> to a lower number.
+        in the selected sequence to a lower number.
         Therefore the control token value does not need to increase forever.
       </p>
 
       <p>
-        Regardless of the <a>selected sequence</a>,
+        Regardless of the selected sequence,
         the <a>Handover Manager</a> does not emit any <a>documents</a>
         derived from input sequence documents that do not contain both
         the parameters <code>ebuttp:authorsGroupIdentifier</code> and
@@ -2009,108 +1544,12 @@
 
     <section id="handover-manager-algorithm">
       <h4>Handover Manager algorithm</h4>
-      <p>The <a>Handover Manager</a> node uses the following
+      <p>The <a>Handover Manager</a> node uses a
         'who claimed control most recently' algorithm
         for selecting the sequence,
-        based on the control token parameter present within each document.</p>
+        based on the control token parameter present within each document,
+        as defined in the TTML Live Extensions Module.</p>
 
-      <p>
-        The <a>Handover Manager</a> shall maintain all of the following variables:
-      </p>
-      <ul>
-        <li>
-          a token <dfn>T</dfn> equal to the value of the
-          <a><code>ebuttp:authorsGroupControlToken</code></a>
-          of the most recently emitted document,
-          or a null value if no document has been emitted;
-        </li>
-        <li>
-          a record <dfn>S<sub>s</sub></dfn> of the <a>sequence identifier</a>
-          of the source sequence used
-          to generate the most recently emitted document,
-          known as the <dfn>selected sequence</dfn>,
-          initially a null value until a sequence is selected;
-        </li>
-        <li>
-          a record <dfn>AG</dfn> of the configured authors group identifier;
-        </li>
-        <li>
-          an output <a>sequence identifier</a> <dfn>S<sub>o</sub></dfn>.
-        </li>
-      </ul>
-
-      <p>
-        When new incoming data is received, the Handover Manager shall:
-      </p>
-      <ol>
-        <li>
-          If the input data is a valid document that contains all of:
-          1) a present and valid <a><code>ebuttp:authorsGroupIdentifier</code></a>
-          equal to <a>AG</a>; and
-          2) a present and valid <a><code>ebuttp:authorsGroupControlToken</code></a>,
-          then treat the document as the “input document” and
-          execute the following sub steps in the stated order:
-          <ol style="list-style-type: lower-alpha;">
-            <li>
-              If <a>T</a> is null
-              (and therefore by definition <a>S<sub>s</sub></a> is also null),
-              or if <a>T</a> is not null and the input document’s
-              <a><code>ebuttp:authorsGroupControlToken</code></a> is greater than <a>T</a>,
-              then select the input document’s sequence
-              by executing the following sub-steps in any order:
-              <ol style="list-style-type: lower-roman;">
-                <li>
-                  set <a>T</a> to the input document’s
-                  <a><code>ebuttp:authorsGroupControlToken</code></a>.
-                </li>
-                <li>
-                  set <a>S<sub>s</sub></a> to
-                  the input document’s <a>sequence identifier</a>.
-                </li>
-              </ol>
-            </li>
-            <li>
-              If and only if the input document’s <a>sequence identifier</a> equals
-              <a>S<sub>s</sub></a>
-              (that is, the input document is from the <a>selected sequence</a>),
-              then execute the following sub steps in the stated order:
-              <ol style="list-style-type: lower-roman;">
-                <li>
-                  generate an output document based on the input document,
-                  setting the output document’s <a>sequence identifier</a> to
-                  <a>S<sub>o</sub></a> and
-                  allocating a valid <a>sequence number</a>
-                  greater than the most recently emitted <a>sequence number</a>,
-                  and adding an
-                  <code>ebuttm:authorsGroupSelectedSequenceIdentifier</code>
-                  attribute set to <a>S<sub>s</sub></a>;
-                </li>
-                <li>
-                  emit the output document;
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </li>
-        <li>
-          Otherwise do not emit a document.
-        </li>
-      </ol>
-      <p class="note">
-        Any implementation that provides the above algorithm’s outputs
-        given any input documents satisfies the requirements;
-        it is not required that implementations use code
-        that exactly matches the steps.
-      </p>
-
-      <p>
-        This algorithm may be extended in implementations
-        for example to set specific behaviour
-        when basing an output document on the input document,
-        or to define emission rules for other types of <a>live document</a>.
-        See also <a href="#handover-manager-practical-considerations"></a>
-        for practical considerations.
-      </p>
     </section> <!-- handover-manager-algorithm -->
 
     <section id="handover-manager-practical-considerations">
@@ -2133,7 +1572,7 @@
       <p>
         The Handover Manager produces a single <a>sequence</a> derived from
         multiple input <a>sequences</a>.
-        However <a href="#system-model"></a> requires that
+        However the System Model requires that
         every <a>document</a> in a <a>sequence</a> has the same timing model.
         This implies that practical arrangements need to be made
         to ensure that the <a>Handover Manager</a>’s
@@ -2167,11 +1606,11 @@
       In order to complete the processing needed
       to ensure that a <a>stream</a> is suitable,
       the system model presented here proposes that
-      a series of <a>Improver nodes</a> would be used
+      a series of Improver nodes would be used
       to perform the necessary processing.
     </p>
     <p>
-      However from a <a>Consumer node</a>'s perspective
+      However from a Consumer node's perspective
       it is not always desirable to rely on the node configuration
       being correct without further information.
       Additionally for compliance monitoring automated processes
@@ -2232,991 +1671,5 @@
     </p>
   </section> <!-- tracing-and-debugging -->
 
-  <section id="document-conformance">
-    <h2>Document Conformance</h2>
-    <p>
-      This section defines the requirements
-      for <a>documents</a> that conform to this specification.
-    </p>
-
-    <section id="generic-constraints">
-      <h3>Generic Constraints</h3>
-      <p>
-        The TTML Live extensions define constraints for
-        an XML document instance.
-        A valid <a>TTML Live document</a> shall comply with the
-        generic constraints in <a href="#generic-constraints"></a>
-        and the document structure defined in
-        <a href="#document-structure-and-content-profile"></a>.
-      </p>
-
-      <section id="namespaces">
-        <h4>Namespaces</h4>
-        <p>
-          The following external namespaces (see [[xml-names]])
-          from [[TTML1]] shall be used
-          for the TTML elements and attributes in this specification:
-        </p>
-
-        <table class="simple">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Prefix</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>TT</td>
-              <td><code>tt:tt</code></td>
-              <td><code>http://www.w3.org/ns/ttml</code></td>
-            </tr>
-
-            <tr>
-              <td>TT Parameter</td>
-              <td><code>ttp</code></td>
-              <td><code>http://www.w3.org/ns/ttml#parameter</code></td>
-            </tr>
-
-            <tr>
-              <td>TT Style</td>
-              <td><code>tts</code></td>
-              <td><code>http://www.w3.org/ns/ttml#styling</code></td>
-            </tr>
-
-            <tr>
-              <td>TT Metadata</td>
-              <td><code>ttm</code></td>
-              <td><code>http://www.w3.org/ns/ttml#metadata</code></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>
-          The following namespaces shall be used for the assignment
-          of XML Schema [[xmlschema11-2]] datatypes:
-        </p>
-        <table class="simple">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Prefix</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>XML Schema</td>
-              <td><code>xs</code></td>
-              <td><code>http://www.w3.org/2001/XMLSchema</code></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>
-          The following namespaces shall be used for the
-          vocabulary introduced by [[EBU-TT-Live-1-0]] to
-          support live contribution of TTML:
-        </p>
-        <table class="simple">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Prefix</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>EBU TT Metadata</td>
-              <td><code>ebuttm</code></td>
-              <td><code>urn:ebu:tt:metadata</code></td>
-            </tr>
-
-            <tr>
-              <td>EBU TT Parameters</td>
-              <td><code>ebuttp</code></td>
-              <td><code>urn:ebu:tt:parameters</code></td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <p class="note">
-          Although any prefix can be used to bind the namespaces
-          in an XML document
-          the use of the prefixes listed above is recommended.
-        </p>
-
-        <p>
-          If attributes in this document are defined without prefix
-          they are not in any namespace.
-        </p>
-      </section> <!-- namespaces -->
-
-      <section id="extensibility">
-        <h4>Extensibility</h4>
-        <p>
-          <a>Documents</a> may be extended as defined by [[TTML1]].
-        </p>
-      </section> <!-- extensibility -->
-
-      <section id="compatibility-with-ttml-timing">
-        <h4>Compatibility with TTML 1.0 timing model</h4>
-        <p>
-          The timing model presented here is compatible with the [[TTML1]]
-          timing model.
-          The additional rules concerning the temporal activation
-          of <a>documents</a> defined in <a href="#document-resolved-times"></a>
-          constitute constraints on the Document Processing Context as
-          defined in [[TTML1]].
-        </p>
-      </section> <!-- compatibility-with-ttml-timing -->
-
-    </section> <!-- generic-constraints -->
-
-    <section id="document-structure-and-content-profile">
-      <h3>Document Structure and Content Profile</h3>
-      <p>
-        [[EBU-TT-Live-1-0]] based document compliance on
-        [[EBU-TT-1-2]] with some changes.
-        This document applies a similar but smaller set of changes
-        relative to [[TTML1]] and
-        [[TTML2]]. The set is smaller because some constraints not needed
-        for this application
-        were introduced in [[EBU-TT-1-2]], for example the requirement that a
-        <code>tt:body</code> element be present.
-        Only the changes are described here.
-        These changes are either modifications
-        to the cardinality of elements or attributes
-        or additional elements and attributes.
-      </p>
-      <p>
-        <a>TTML Live documents</a> shall be valid TTML documents. [[TTML2]]
-      </p>
-
-      <p>
-        Definitions used within this section:
-      </p>
-      <table class="simple">
-        <colgroup>
-          <col style="width: 12ch;" span="1">
-          <col span="1">
-        </colgroup>
-
-        <tbody>
-          <tr>
-            <td><em>Type:</em></td>
-            <td>
-              Constraints of the Information structure of
-              an XML element or XML attribute.
-              The type can be further constrained through Enumerations
-              and normative text in the description.
-            </td>
-          </tr>
-          <tr>
-            <td><em>Enumeration:</em></td>
-            <td>
-              Enumerated values that shall be used for
-              certain elements or attributes of type <code>xs:string</code>.
-            </td>
-          </tr>
-          <tr>
-            <td><em>Cardinality:</em></td>
-            <td>
-              How often an element or attribute
-              may be used inside the corresponding parent element.
-              If the lower bound is greater than 0 (e.g. “1..1” or “1..*”)
-              the element or attribute is mandatory
-              at this position of the document structure.
-              If the lower bound is equal to 0 (e.g. “0..1” or “0..*”)
-              the element or attribute is optional
-              at this position of the document structure.
-            </td>
-          </tr>
-          <tr>
-            <td><em>TTML:</em></td>
-            <td>
-              The URL to the specific chapter in the [[TTML1]] specification
-              where the attribute or element is defined.
-              The normative constraints of [[TTML1]] apply
-              unless they are further constrained by this specification.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        Rows highlighted <span class="label required-attr">in grey</span>
-        and marked as required or cardinality 1..1 indicate required attributes.
-      </p>
-
-      <section id="entities-with-cardinality-changes">
-        <h4>Attributes whose cardinality differs</h4>
-        <p>
-          The following table shows the entities
-          whose cardinality differs relative to [[TTML1]].
-          The entity paths are provided in the style of an XPath [[xpath-30]].
-        </p>
-
-        <table class="simple">
-          <thead>
-            <tr>
-              <td></td>
-              <td></td>
-              <th colspan="2">Cardinality</th>
-              <td></td>
-            </tr>
-            <tr>
-              <th>Entity path and name</th>
-              <th>Entity type</th>
-              <th>TTML1</th>
-              <th>Here</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>/tt/@ttp:markerMode</code></td>
-              <td>Attribute</td>
-              <td>0..1</td>
-              <td>0..0</td>
-              <td><code>ttp:timeBase="smpte"</code> is also prohibited.</td>
-            </tr>
-
-          </tbody>
-        </table>
-      </section> <!-- entities-with-cardinality-changes -->
-
-      <section id="changed-entities">
-        <h4>Newly introduced or constrained attributes</h4>
-
-        <p>
-          This section lists those attributes that are either constrained or
-          added by this specification; each is further described below.
-          All are defined for the <code>tt:tt</code> element only.
-          The following table lists the attributes in the section.
-        </p>
-
-        <table class="simple">
-          <thead>
-            <tr>
-              <th>Attribute name</th>
-              <th>Required</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="required-attr">
-              <td>
-                <code>ttp:timeBase</code>
-                (applicable to <code>dur</code> attribute)
-              </td>
-              <td>Yes</td>
-            </tr>
-
-            <tr class="required-attr">
-              <td><code>ebuttp:sequenceIdentifier</code></td>
-              <td>Yes</td>
-            </tr>
-
-            <tr class="required-attr">
-              <td><code>ebuttp:sequenceNumber</code></td>
-              <td>Yes</td>
-            </tr>
-
-            <tr>
-              <td><code>ebuttp:authorsGroupIdentifier</code></td>
-              <td>No</td>
-            </tr>
-
-            <tr>
-              <td><code>ebuttp:authorsGroupControlToken</code></td>
-              <td>No</td>
-            </tr>
-
-            <tr>
-              <td><code>ebuttp:referenceClockIdentifier</code></td>
-              <td>No</td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <section id="ttp-timebase-attr">
-          <h5><code>ttp:timeBase</code> (attribute)</h5>
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:string</code></td>
-              </tr>
-
-              <tr>
-                <th>Enumeration</th>
-                <td><code>media</code> | <code>clock</code></td>
-              </tr>
-
-              <tr class="required-attr">
-                <th>Cardinality</th>
-                <td>1..1</td>
-              </tr>
-
-              <tr>
-                <th>TTML</th>
-                <td>
-                  <a href="http://www.w3.org/TR/ttml1/#parameter-attribute-timeBase">
-                    http://www.w3.org/TR/ttml1/#parameter-attribute-timeBase
-                  </a>
-                </td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  The <code>ttp:timeBase</code> element is constrained
-                  to prohibit the value <code>smpte</code>, i.e. in a content
-                  profile the
-                  <a href="https://www.w3.org/TR/ttml1/#feature-timeBase-smpte">
-                    #timeBase-smpte</a> feature is <em>prohibited</em>.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section> <!-- ttp-timebase-attr -->
-
-        <section id="ebuttp-sequenceIdentifier-attr">
-          <h5><dfn><code>ebuttp:sequenceIdentifier</code></dfn> (attribute)</h5>
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:string minLength="1"</code></td>
-              </tr>
-
-              <tr class="required-attr">
-                <th>Cardinality</th>
-                <td>1..1</td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  <p>
-                    The <a>sequence</a> to which every <a>document</a> belongs
-                    shall be identified using the
-                    <code>ebuttp:sequenceIdentifier</code> attribute.
-                  </p>
-                  <p>
-                    The data type is constrained to be a non empty string,
-                    i.e. with a restriction defined as
-                    <code>minLength="1"</code> [[xmlschema11-2]].
-                  </p>
-                  <p class="note">
-                    It is possible for legal <a>sequence identifier</a> values
-                    to be used in a context within which
-                    they could cause difficulties.
-                    An example of this is if the <a>sequence identifier</a>
-                    contains a “/” character
-                    and is being used to form part of a URL.
-                    In such cases one approach is
-                    to escape the string before using it within that context and
-                    to de-escape it on extraction from that context
-                    before using it as a sequence identifier.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section> <!-- ebuttp-sequenceIdentifier-attr -->
-
-        <section id="ebuttp-sequenceNumber-attr">
-          <h5><dfn><code>ebuttp:sequenceNumber</code></dfn> (attribute)</h5>
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:positiveInteger</code></td>
-              </tr>
-
-              <tr class="required-attr">
-                <th>Cardinality</th>
-                <td>1..1</td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  <p>
-                    Every non <a>identical</a> <a>document</a> with the same
-                    <code>ebuttp:sequenceIdentifier</code>
-                    shall be uniquely numbered using the
-                    <code>ebuttp:sequenceNumber</code> attribute.
-                  </p>
-                  <p>
-                    Processors shall discard <a>documents</a> whose pair of
-                    <code>ebuttp:sequenceIdentifier</code> and
-                    <code>ebuttp:sequenceNumber</code> are <a>identical</a>
-                    to those in its <a>document cache</a>.
-                    In this case processors may issue a warning
-                    if the two <a>documents</a> are not <a>identical</a>.
-                    The <a>availability time</a> of the (not discarded) document
-                    shall not be changed due to such a discard.
-                    See also <a href="#pruning-history"></a>.
-                  </p>
-                  <p class="note">
-                    It is not considered an error
-                    to issue an <a>identical</a> document more than once;
-                    this pattern may be used
-                    for example when inserting a subtitle document
-                    in ancillary data associated with
-                    every frame of a video stream,
-                    which pattern could facilitate editing.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-        </section> <!-- ebuttp-sequenceNumber-attr -->
-
-        <section id="ebuttp-authorsGroupIdentifier-attr">
-          <h5><dfn><code>ebuttp:authorsGroupIdentifier</code></dfn> (attribute)</h5>
-          <p>
-            The parameters <code>ebuttp:authorsGroupIdentifier</code> and
-            <code>ebuttp:authorsGroupControlToken</code> are provided
-            to facilitate handover between subtitle authors,
-            using semantics defined for the <a>Handover Manager</a> node in
-            <a href="#handover"></a>.
-          </p>
-
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:string minLength="1"</code></td>
-              </tr>
-
-              <tr>
-                <th>Cardinality</th>
-                <td>0..1</td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  <p>
-                    The data type is constrained to be a non empty string,
-                    i.e. with a restriction defined as
-                    <code>minLength="1"</code> [[xmlschema11-2]].
-                  </p>
-                  <p>
-                    Identifies the group of authors
-                    whose <a>sequences</a> relate to the same content and
-                    amongst which a <a>Handover Manager</a>
-                    should select <a>documents</a> when generating
-                    its output <a>sequence</a>.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section> <!-- ebuttp-authorsGroupIdentifier-attr -->
-
-        <section id="ebuttp-authorsGroupControlToken-attr">
-          <h5>
-            <dfn><code>ebuttp:authorsGroupControlToken</code></dfn>
-            (attribute)
-          </h5>
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:positiveInteger</code></td>
-              </tr>
-
-              <tr>
-                <th>Cardinality</th>
-                <td>0..1</td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  <p>
-                    The control token used to direct a <a>Handover Manager</a>
-                    to select an input <a>sequence</a> from
-                    a particular authors group.
-                    The input <a>sequence</a> whose <a>document</a>
-                    has the greatest
-                    <code>ebuttp:authorsGroupControlToken</code> value
-                    is selected for output.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section> <!-- ebuttp-authorsGroupControlToken-attr -->
-
-        <section id="ebuttp-referenceClockIdentifier-attr">
-          <h5><dfn><code>ebuttp:referenceClockIdentifier</code></dfn> (attribute)</h5>
-          <table class="simple">
-            <colgroup>
-              <col style="width: 12ch;" span="1">
-              <col span="1">
-            </colgroup>
-
-            <tbody>
-              <tr>
-                <th>Type</th>
-                <td><code>xs:anyURI</code></td>
-              </tr>
-
-              <tr>
-                <th>Cardinality</th>
-                <td>0..1</td>
-              </tr>
-
-              <tr>
-                <th>Description</th>
-                <td>
-                  <p>
-                    Allows the reference clock source to be identified.
-                    Permitted only when <code>ttp:timeBase="clock"</code> AND
-                    <code>ttp:clockMode="local"</code>.
-                  </p>
-                  <p class="note">
-                    This attribute differs from the metadata element
-                    <code>ebuttm:referenceClockIdentifier</code> [[EBU-TT-M]]
-                    because it is expected to affect processing
-                    rather than simply being a record of the clock source.
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section> <!-- ebuttp-referenceClockIdentifier-attr -->
-
-      </section> <!-- changed-entities -->
-
-    </section> <!-- document-structure-and-content-profile -->
-
-  </section> <!-- document-conformance -->
-
-  <section id="node-conformance">
-    <h2>Node Conformance</h2>
-    <p>
-      This section defines the requirements for
-      <a>nodes</a> that conform to this specification.
-    </p>
-
-    <p>
-      Node conformance is defined in terms of their behaviours only.
-      The <a>nodes</a> defined here are not the only permitted nodes;
-      the purpose of defining them is
-      to define minimal expectations
-      to support interoperability of node implementations.
-    </p>
-
-    <p>
-      <a>Nodes</a> are defined as abstract classes.
-      See <a href="#node-classes-figure"></a> for
-      a UML representation of the abstract node class structure.
-    </p>
-
-    <figure id="node-classes-figure">
-      <img src="images/node-uml-model.svg" alt="">
-      <figcaption>
-        UML model showing logical <a>nodes</a> and their relationships
-      </figcaption>
-    </figure>
-
-    <section id="generic-node-classes">
-      <h3>Generic Node Classes</h3>
-      <p>
-        This section defines the behaviours of <a>nodes</a>.
-        The nodes are specified as abstract classes
-        that inherit behaviour from their parent.
-        This section is structured according to
-        the inheritance tree,
-        so a subsection inherits the definitions of
-        its parent section within the document.
-        For example a <a>Processing Node</a> <em>is</em> a <a>Node</a>.
-      </p>
-
-      <section id="node">
-        <h4>Node</h4>
-        <p>
-          A <a>node</a> is a logical processing unit
-          that consumes or emits a <a>sequence</a>.
-        </p>
-        <p class="note">
-          Physical implementations could
-          combine the actions of multiple <a>nodes</a>.
-        </p>
-
-        <section id="processing-node">
-          <h4>Processing Node</h4>
-          <p>
-            A <a>processing node</a> emits a <a>sequence</a> that
-            can differ from any of its inputs.
-          </p>
-          <p>
-            A <a>processing node</a> may consume one or more <a>sequences</a>.
-            The <a>sequence</a> that it emits shall be
-            differently identified to all of its input <a>sequences</a>.
-          </p>
-
-          <section id="producer-node">
-            <h5>Producer Node</h5>
-            <p>
-              A <dfn data-lt="producer|producer node">Producer Node</dfn>
-              consumes no <a>sequences</a>.
-            </p>
-            <p class="note">
-              An authoring station is a concrete example of
-              a <a>Producer node</a>.</p>
-          </section> <!-- producer-node -->
-
-          <section id="improver-node">
-            <h5>Improver Node</h5>
-            <p>
-              An <dfn data-lt="improver|improver node">Improver Node</dfn>
-              consumes exactly one <a>sequence</a>.
-            </p>
-
-              <section id="delay">
-                <h5>Delay</h5>
-                <p>
-                  A <a>Delay</a> imposes a specified delay <a>offset period</a>
-                  between its input <a>sequence</a> and
-                  its output <a>sequence</a>.
-                </p>
-
-                <section id="buffer-delay">
-                  <h6>Buffer Delay</h6>
-                  <p>
-                    A <a>Buffer Delay</a> imposes an emission delay
-                    <a>offset period</a> according to
-                    the semantics defined in <a href="#buffer-delay-node"></a>.
-                  </p>
-                </section> <!-- buffer-delay -->
-
-                <section id="retiming-delay">
-                  <h6>Retiming Delay</h6>
-                  <p>
-                    A <a>Retiming Delay</a> imposes a delay <a>offset period</a>
-                    by adjusting <a>document</a> times according to
-                    the semantics defined in <a href="#retiming-delay-node"></a>.
-                  </p>
-                </section> <!-- retiming-delay -->
-              </section> <!-- delay-node -->
-
-          </section> <!-- improver-node -->
-
-          <section id="synthesiser-node">
-            <h4>Synthesiser</h4>
-            <p>
-              A <dfn data-lt="synthesiser|synthesiser node">Synthesiser</dfn>
-              consumes one or more <a>sequences</a>
-              and outputs a new <a>sequence</a>
-              in some way derived from those input <a>sequences</a>.
-            </p>
-
-            <section id="handover-manager-node">
-              <h5>Handover Manager</h5>
-              <p>
-                A <a>Handover Manager</a> synthesises an output <a>sequence</a>
-                based on a combination of its input <a>sequences</a>,
-                according to the semantics defined in <a href="#handover"></a>.
-              </p>
-            </section> <!-- handover-manager-node -->
-
-          </section> <!-- synthesiser-node -->
-
-        </section> <!-- processing-node -->
-
-        <section id="passive-node">
-          <h4>Passive Node</h4>
-          <p>
-            A <a>Passive Node</a> receives one or more <a>sequences</a>.
-            Any <a>documents</a> that it emits are
-            <a>identical</a> to the <a>document</a>(s) that it receives.
-          </p>
-
-          <section id="matrix-node">
-            <h5>Matrix</h5>
-            <p>
-              A <dfn data-lt="matrix|matrix node">matrix</dfn>
-              receives any number of <a>sequences</a>
-              and emits any number of <a>sequences</a>.
-            </p>
-
-            <section id="switching-node">
-              <h6>Switching Node</h6>
-              <p>
-                A <dfn>switching node</dfn>
-                receives one or more <a>sequences</a>
-                and emits one of the received <a>sequences</a>.
-              </p>
-            </section> <!-- switching-node -->
-
-            <section id="distributing-node">
-              <h6>Distributing Node</h6>
-              <p>
-                A <dfn>distributing node</dfn>
-                receives one <a>sequence</a>
-                and emits it as any number of <a>streams</a>.
-              </p>
-            </section> <!-- distributing-node -->
-
-          </section> <!-- matrix-node -->
-
-          <section id="consumer-node">
-            <h4>Consumer</h4>
-            <p>
-              A <dfn data-lt="consumer node|consumer">consumer</dfn>
-              receives one <a>sequence</a>
-              and emits zero <a>sequences</a>.</p>
-            <p class="note">
-              An <a>encoder</a> is a concrete example of a 
-              <a>Consumer node</a>.</p>
-          </section> <!-- consumer-node -->
-        </section> <!-- passive-node -->
-      </section> <!-- node -->
-    </section> <!-- generic-node-classes -->
-
-  </section> <!-- node-conformance -->
-
-  <section class="appendix" id="carriage-specification-requirements">
-    <h2>Requirements for Carriage Specifications</h2>
-    <p>
-      This document does not define <a>carriage mechanisms</a>
-      for streaming <a>sequences</a> between <a>nodes</a>.
-    </p>
-
-    <p>
-      A specification described as a
-      <dfn data-lt="TTML Live Carriage Specification|carriage specification document|carriage specification">
-        TTML Live Carriage Specification
-      </dfn>
-      is conformant if it complies with
-      the requirements described in this annex.
-    </p>
-
-    <p>
-      Authors of such <a>carriage specifications</a> are encouraged to inform
-      W3C Timed Text Working Group for example by email to
-      <a href="mailto:public-tt@w3.org">public-tt@w3.org</a>
-      (<a href="https://lists.w3.org/Archives/Public/public-tt/">archives</a>).
-    </p>
-
-    <section id="carriage-networking">
-      <h3>Core networking dependencies and connection protocols</h3>
-      <p>
-        <a>Carriage specification documents</a> shall describe
-        the core networking dependencies and protocols,
-        that is, if the mechanism is based on IP with TCP,
-        IP with UDP, VBI in SDI, VANC in HD-SDI etc.
-        and shall reference any related standards.
-      </p>
-
-      <p>
-        <a>Carriage specifications</a> should not depend on
-        non standard connection protocols,
-        that is, those that do not conform
-        to common definitions of open standards
-        such as [[?OPENSTD]].
-      </p>
-
-      <p>
-        Where the networking dependencies impose constraints,
-        those constraints shall be described.
-        For example a <a>carriage specification</a> for TTML Live over
-        VBI embedded in SDI would impose a maximum data rate constraint.
-        Another example could be the need for,
-        and impact of packetisation if used by a networking protocol.
-      </p>
-    </section> <!-- carriage-networking -->
-
-    <section id="carriage-synchronisation">
-      <h3>Synchronisation impacts and/or thresholds</h3>
-      <p>
-        <a>Carriage specification documents</a> shall describe
-        any interactions between the <a>carriage mechanism</a>
-        and the synchronisation of live subtitles.
-        For example an embedded mechanism such as
-        VANC in HD-SDI could maintain frame based synchronisation
-        wherever it is routed, meaning that the synchronisation is defined
-        when the subtitles are embedded rather than
-        when they are received further downstream.
-      </p>
-    </section> <!-- carriage-synchronisation -->
-
-    <section id="carriage-information-security">
-      <h3>Information Security</h3>
-      <p><a>Carriage specification documents</a> shall describe:</p>
-      <ul>
-        <li>
-          what provision is made for
-          supporting information security requirements
-          including but not limited to
-          authentication, encryption and error checking mechanisms;
-        </li>
-        <li>
-          under what, if any, circumstances the mechanisms described
-          can be considered acceptable
-          for crossing organisational boundaries;
-        </li>
-        <li>
-          any known impacts or dependencies on
-          other information security technologies,
-          for example is the mechanism transparent to firewalls
-          or does it need special configuration,
-          is there a framework for allowing future authentication
-          and encryption mechanisms to be used, etc.</li>
-      </ul>
-    </section> <!-- carriage-information-security -->
-
-    <section id="carriage-endpoints">
-      <h3>Endpoint cardinality</h3>
-      <p>
-        <a>Carriage specification documents</a> shall describe
-        whether they natively support point to point delivery,
-        or point to multipoint delivery,
-        or both.
-      </p>
-
-      <p>
-        If a <a>carriage specification</a> makes use of a duplex reverse channel
-        for delivery monitoring or fault identification then
-        that mechanism shall be described including the technique used,
-        for example acknowledgement messages and their format,
-        the time impact of such techniques,
-        and the expected behaviour in case a fault is identified.
-      </p>
-      <p class="note">
-        Reverse channels are not a requirement in general.
-      </p>
-    </section> <!-- carriage-endpoints -->
-
-    <section id="carriage-connection-lifecycle">
-      <h3>Connection lifecycle management</h3>
-      <p>
-        <a>Carriage specification documents</a> shall either 
-        a) define the lifecycle of any connections,
-        or b) reference standards that define the lifecycle of any connections.
-        The lifecycle here refers to the
-        initiation, establishment, ongoing maintenance,
-        planned closure and error handling of the connections.
-      </p>
-
-      <p class="note">
-        If <a>carriage specifications</a> do not need use any form
-        of connection this requirement is relaxed.
-      </p>
-    </section> <!-- carriage-connection-lifecycle -->
-
-    <section id="carriage-routing">
-      <h3>Channel routing</h3>
-      <p>
-        <a>Carriage specifications</a> may define registries
-        or other ways to associate
-        a) <a>streams</a> with the services, channels, programmes, languages etc.
-        for which they are intended
-        and b) <a>nodes</a> that can provide particular streams.
-        This information could be used operationally
-        to automate the routing of subtitle <a>streams</a>
-        from authors to encoders.
-        If such mechanisms are included the metadata model used
-        should be described or referenced,
-        and any impact on synchronisation should be described.</p>
-      <p class="note">
-        The channel routing mechanisms could include a description of
-        how to switch between input streams in a content dependent way.
-      </p>
-    </section> <!-- carriage-routing -->
-
-    <section id="carriage-stability">
-      <h3>Stability</h3>
-      <p>
-        <a>Carriage specifications</a> shall describe or reference
-        the expected level of connection stability,
-        and operational approaches for maintaining that stability.
-        For example this would include how the mechanism handles
-        dropped connection fault conditions,
-        whether data delivery is guaranteed
-        or some documents may be lost as a matter of course,
-        how the latency characteristics of the mechanism may vary,
-        how version compatibility issues are managed,
-        amd what statistics and monitoring are available.</p>
-      <p class="note">
-        A TCP socket based protocol would exhibit
-        guaranteed data delivery behaviour at the possible expense of
-        delivery timing;
-        conversely a UDP based protocol would exhibit minimal delivery timing
-        at the possible expense of data loss.
-        These characteristics affect the stability of
-        the operational connections,
-        and need to be described so that stable systems can be engineered.
-      </p>
-    </section> <!-- carriage-stability -->
-
-    <section id="carriage-interoperability">
-      <h3>Interoperability</h3>
-      <p>
-        It is recommended that <a>carriage mechanisms</a>
-        should be defined with interoperability in mind.
-        Interfaces should not need to be hardware or vendor specific,
-        should ideally publish details of available services on request,
-        should self describe their external interfaces,
-        and should permit any relevant configuration of
-        the services available to be published.
-        Where <a>carriage mechanisms</a> multiplex
-        <a>TTML Live documents</a> with other data,
-        e.g. by embedding in an HD-SDI signal,
-        the mechanism shall be transparent to
-        devices that are unable to process <a>TTML Live documents</a>,
-        that is, the presence of <a>TTML Live documents</a> shall not
-        cause a fault in compliant devices,
-        for example by extending beyond fixed size data windows,
-        including bytes with special meaning,
-        mis-representing the <a>TTML Live documents</a> as
-        an incompatible format etc.
-      </p>
-      <p>
-        Serial data communication protocols
-        such as RS232 and RS422 are considered
-        unsuitable for meeting this need and are deprecated.
-      </p>
-    </section> <!-- carriage-interoperability -->
-  </section> <!-- carriage-specification-requirements -->
   </body>
 </html>
