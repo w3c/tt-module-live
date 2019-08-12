@@ -38,6 +38,20 @@
       };
     </script>
     <style>
+      table.coldividers td + td { border-left:1px solid gray; text-align: center;}
+      table.syntax { border: 0px solid black; width: 85%; border-collapse: collapse }
+      table.syntax caption { font-weight: bold; text-align: left; padding-bottom: 0.5em }
+      table.syntax th { border: 0px solid black; text-align: left }
+      table.syntax td { border: 0px solid black }
+      table.syntax div { background-color: #ffffc8 }
+      div.exampleInner { background-color: #d5dee3;
+                      border-top-width: 4px;
+                      border-top-style: double;
+                      border-top-color: #d3d3d3;
+                      border-bottom-width: 4px;
+                      border-bottom-style: double;
+                      border-bottom-color: #d3d3d3;
+                      padding: 4px; margin: 0em }
       span.label {
         display: inline-block;
         border-radius: 3px;
@@ -46,6 +60,50 @@
       }
       span.required-attr, tr.required-attr {
         background-color: #eeeeee !important;
+      }
+      span.optional::before {
+        font-weight: bold;
+        content: "\00A0\003F\00A0"
+      }
+      span.permitted::before {
+        content: "\00A0\2713\00A0"
+      }
+      span.prohibited::before {
+        content: "\00A0\2718\00A0"
+      }
+      span.permitted-deprecated::before {
+        font-weight: bold;
+        content: "\00A0!\00A0"
+      }
+      span.label::after {
+        content: "\00A0";
+      }
+      span.optional {
+        color: black;
+        background-color: #50ffff;
+      }
+      span.permitted {
+        color: black;
+        background-color: #50FF50;
+      }
+      span.prohibited {
+        color: black;
+        background-color: #FF5F5F;
+      }
+      span.permitted-deprecated {
+        color: black;
+        background-color: #FFC000;
+      }
+      span.required {
+        color: black;
+        background-color: yellow;
+        border-color: black;
+        border-width: medium;
+        border-style: solid;
+      }
+      span.required::before {
+        font-weight: bold;
+        content: "\00A0!\00A0";
       }
     </style>
   </head>
@@ -1444,6 +1502,15 @@
         <code>ebuttp:referenceClockIdentifier</code>  parameter attribute in a
         <code>ebuttm:referenceClockIdentifier</code> element.
       </p>
+
+      <p class="note">
+        Since the mechanism for dereferencing and processing the result of
+        a query on the reference clock identified by 
+        <code>ebuttp:referenceClockIdentifier</code>
+        is not defined by this specification,
+        the profile feature disposition for <a href="#feature-live-referenceClockIdentifier"><code>#live-referenceClockIdentifier</code></a>
+        is <a>optional</a> rather than <a>permitted</a>.
+      </p>
     </section> <!-- reference-clocks -->
 
   </section> <!-- timing-and-synchronisation -->
@@ -1763,7 +1830,7 @@
 
             <tr>
               <td><dfn><a>TT Feature</a></dfn></td>
-              <td><i>none</i>></td>
+              <td><i>none</i></td>
               <td><code>http://www.w3.org/ns/ttml/feature</code></td>
             </tr>
 
@@ -2312,6 +2379,130 @@
     </section> <!-- document-structure-and-content-profile -->
 
   </section> <!-- document-conformance -->
+
+  <section id="profile">
+    <h2>Profile</h2>
+    <p>
+      This specification defines a profile of TTML2 that can be used in
+      conjunction with other applicable profiles;
+      rather than being a complete profile in itself,
+      the profile defines the constraints that must be applied
+      and the extensions that must be supported in a
+      <a>TTML Live document</a>.
+    </p>
+    <p>
+      The dispositions 
+      <a>optional</a>, 
+      <a>permitted</a>, 
+      <a>prohibited</a> 
+      and <a>required</a>
+      are used in relation to profile features and extensions as defined below:
+    </p>
+    <ul>
+      <li>
+        <dfn><span class="optional label">optional</span></dfn> 
+        The vocabulary associated with an optional feature or extension
+        may be present in a conformant document;
+        each optional feature or extension may be supported by a conformant <a>processor</a>; a conformant processor shall not reject a conformant
+        document containing the vocabulary associated with an optional feature.
+      </li>
+      <li>
+        <dfn><span class="permitted label">permitted</span></dfn>
+        The vocabulary associated with a permitted feature or extension
+        may be present in a conformant document;
+        each permitted feature or extension shall be supported by a conformant <a>processor</a>.
+      </li>
+      <li>
+        <dfn><span class="prohibited label">prohibited</span></dfn>
+        The vocabulary associated with an optional feature or extension
+        shall not be present in a conformant document;
+        each prohibited feature or extension may be supported by a conformant <a>processor</a>.
+      </li>
+      <li>
+        <dfn><span class="required label">required</span></dfn>
+        The vocabulary associated with a required feature or extension
+        shall be present in a conformant document;
+        each required feature or extension shall be supported by a conformant <a>processor</a>.
+      </li>
+    </ul>
+
+    <section id="supported-features-and-extensions">
+        <h3>Supported Features and Extensions</h3>
+    
+        <table class='simple coldividers'>
+          <tbody>
+            <tr>
+              <th style="text-align:center">Feature or Extension</th>
+    
+              <th style="text-align:center">Disposition</th>
+            </tr>
+    
+            <tr>
+              <td colspan="2" style="text-align:center"><em>Relative to the TT Feature namespace</em><br>
+              All features specified in [[ttml2]] are <a>permitted</a> unless specified otherwise below</td>
+            </tr>
+    
+            <tr>
+              <td>
+                <a href="https://www.w3.org/TR/ttml2/#feature-timeBase-smpte"><code>#timeBase-smpte</code></a>
+              </td>
+    
+              <td><span class="prohibited label">prohibited</span></td>
+            </tr>
+    
+            <tr>
+              <td>
+                <a href="#feature-live-sequence"><code>#live-sequence</code></a>
+              </td>
+    
+              <td><span class="required label">required</span></td>
+            </tr>
+    
+            <tr>
+              <td>
+                <a href="#feature-live-handover"><code>#live-handover</code></a>
+              </td>
+    
+              <td><span class="optional label">optional</span><br>
+                <small><span class="permitted label">Permitted</span> by any <a>processor</a> claimed to be a <a>Handover Manager node</a>.</small></td>
+            </tr>
+
+            <tr>
+              <td>
+                <a href="#feature-live-referenceClockIdentifier"><code>#live-referenceClockIdentifier</code></a>
+              </td>
+    
+              <td><span class="optional label">optional</span></td>
+            </tr>
+
+
+            <tr>
+              <td>
+                <a href="#feature-liveNode-bufferDelay"><code>#liveNode-bufferDelay</code></a>
+              </td>
+    
+              <td>
+                <span class="optional label">optional</span><br>
+                <small><span class="permitted label">Permitted</span> by any <a>processor</a> claimed to be a <a>Buffer delay node</a>.</small>
+              </td>
+            </tr>
+
+            <tr>
+                <td>
+                  <a href="#feature-liveNode-retimingDelay"><code>#liveNode-retimingDelay</code></a>
+                </td>
+      
+                <td>
+                  <span class="optional label">optional</span><br>
+                  <small><span class="permitted label">Permitted</span> by any <a>processor</a> claimed to be a <a>Retiming delay node</a>.</small>
+                </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </section>
+
+  </section> <!-- profile -->
 
   <section id="node-conformance">
     <h2>Node Conformance</h2>
