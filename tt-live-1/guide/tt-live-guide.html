@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>TTML Live Extensions Guide v1</title>
+    <script
+     src='https://www.w3.org/Tools/respec/respec-w3c-common'
+     class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "WG-NOTE"
+        , noRecTrack: true
+        , processVersion: "2019"
+        , editors: [{
+          name: "Nigel Megitt",
+          w3cid: "64750",
+          mailto: "nigel.megitt@bbc.co.uk",
+        }]
+        , wg: "Timed Text Working Group"
+        , wgURI: "https://www.w3.org/AudioVideo/TT/"
+        , wgPublicList: "public-tt"
+        , wgPatentURI: "https://www.w3.org/2004/01/pp-impl/34314/status"
+        , subjectPrefix: "[tt-live--guide-1]"
+        , edDraftURI: "https://w3c.github.io/tt-module-live/tt-live1/guide/tt-live-guide.html"
+        , github: {
+            repoURL : "https://github.com/w3c/tt-module-live/",
+            branch : "master"
+          }
+        ,   license: "w3c"
+        // github: "http://github.com/w3c/some-spec",
+        , shortName: "tt-live-guide-1"
+        , localBiblio: {
+          "OPENSTD": {
+            publisher: "OpenStand",
+            href: "https://open-stand.org/about-us/principles/",
+            title: "Open Stand Principles"
+          }
+        }
+      };
+    </script>
+    <style>
+      span.label {
+        display: inline-block;
+        border-radius: 3px;
+        padding-left: 2px;
+        padding-right: 2px;
+      }
+      span.required-attr, tr.required-attr {
+        background-color: #eeeeee !important;
+      }
+    </style>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This document informatively describes and elaborates
+        the constraints and extensions to TTML
+        defined by the TTML Live Extensions Module v1.
+        The functionality described is intended 
+        to support the contribution
+        of real time streams of content,
+        primarily subtitles and captions,
+        from an authoring or playout system
+        via a controlled network
+        to an encoder
+        whose output is intended for wider distribution.
+        It makes use of a system model including <em>nodes</em>,
+        <em>sequences</em> and <em>streams</em>.
+        The primary use case is the transfer of
+        live subtitles and captions
+        within a broadcast or media preparation
+        environment.
+      </p>
+      <p>
+        This document is an abridged version of [[EBU-TT-Live-1-0]]
+        where normative information has been removed.
+      </p>
+      <p>
+        These extensions are based on [[EBU-TT-Live-1-0]]
+        developed by <a href="https://tech.ebu.ch/home">EBU</a> and
+        benefit from technical consensus and implementation experience
+        gathered there.
+      </p>
+    </section> <!-- abstract -->
+
+    <section id='sotd'>
+      <p>
+      </p>
+    </section> <!-- sotd -->
+
+    <section id="scope">
+      <h2>Scope</h2>
+      <p>
+        This document elaborates the
+        TTML Live module extensions to TTML
+        that support the contribution
+        of real time streams of content,
+        primarily subtitles and captions,
+        from an authoring or playout system
+        via a controlled network
+        to an encoder
+        whose output is intended for wider distribution.
+        The primary use case is the transfer of
+        live subtitles and captions
+        within a broadcast or media preparation
+        environment.
+      </p>
+      <p>
+        These extensions are designed to support direct contribution
+        of streams of TTML in the absence of any other data structure that might
+        provide additional semantics, or to work within such other structures.
+      </p>
+      <p>
+        This document describes how [[TTML1]] can be used in a broadcasting
+        environment to carry subtitles and captions that are created
+        in real time ("live" or from a prepared file)
+        from an authoring station
+        to an encoder
+        prior to distribution,
+        via intermediate processing units.
+        It explains further the specified:
+      </p>
+      <ul>
+        <li>
+          system model consisting of processing nodes
+          that pass streams of subtitles along a chain;
+        </li>
+        <li>
+          content profile specifying the data format of each document
+          in a live subtitle stream;
+        </li>
+        <li>
+          mechanism by which content providers can
+          model and potentially improve synchronisation
+          between the subtitles and the audio to which they relate;
+        </li>
+        <li>
+          mechanism for interoperable management of the
+          handover from one subtitler to the next,
+          to generate a single output subtitle stream.
+        </li>
+        <li>
+          extension facility to allow other types of
+          live documents to be defined in future specifications,
+          for example for passing messages between subtitlers.
+        </li>
+      </ul>
+      <p>
+        The mechanisms by which such streams of TTML are carried are out of
+        scope of this document; however the requirements for any specification
+        of such a mechanism are specified by the TTML Live Extensions Module.
+      </p>
+    </section> <!-- scope -->
+
+    <section>
+      <h2>Conformance</h2>
+      <p>
+        This document is purely informative. 
+        All normative requirements are
+        defined in the TTML Live Extensions Module. 
+        Any language that happens to be coincident with 
+        conformance language is not intended as such.
+      </p>
+    </section> <!-- conformance -->
+
+  <section id="introduction" class="informative">
+    <h2>Introduction</h2>
+    <p>
+      The topic of live subtitle or caption authoring,
+      routing and encoding is large.
+      Organisations such as broadcasters,
+      access service providers and other content providers
+      face a variety of challenges ranging from the editorial,
+      for example word accuracy and rate, to the technical,
+      for example how the text data is routed from the author to the encoder,
+      what format it should be in and how it can be configured and monitored.
+      The classical way to address such a large “problem space” is
+      to divide it up into more easily solvable constituent parts.
+      This approach is taken here.
+    </p>
+    <p>
+      This document also provides useful options for
+      mixing the play out of prepared subtitle documents and live subtitles,
+      a problem that arises for all broadcast channels
+      whose output is not either 100% pre recorded or 100% live.
+    </p>
+    <p>
+      Authoring conventions,
+      for example the use of colour to identify speakers,
+      are not directly addressed in this document;
+      however care has been taken to ensure that
+      the technical solutions presented here
+      can support a variety of conventions.
+      System setup,
+      configuration,
+      management,
+      resilience,
+      monitoring
+      and recovery
+      are likewise addressed indirectly
+      by modelling the potential architectures in the abstract
+      and designing the data format to support those architectures.
+    </p>
+    <section id="intro-exchange-format">
+      <h3>TTML as an exchange format for live and prepared subtitles.</h3>
+      <p>
+        TTML and profiles such as [[ttml-imsc1.1]] are intended for general use
+        in exchanging prepared <a>subtitles</a> and <a>captions</a>.
+        This workflow is extended by this document to include exchange of
+        live subtitles and captions.
+      </p>
+    </section> <!-- intro-exchange-format -->
+    <section id="intro-summary">
+      <h3>Summary of key points</h3>
+      <p>
+        The content is carried in <dfn>sequences</dfn> of Document Instances.
+        <!-- NM: Make Document Instance a defined term -->
+        In addition to the text it can contain styling, layout, timing and
+        additional metadata information.
+      </p>
+      <pre class="example"
+        data-include="examples/intro-document.xml"
+        data-include-format="text">
+      </pre>
+      <p>
+        Each document instance indicates the sequence to which it belongs
+        using a <dfn>Sequence Identifier</dfn>. The order is set by a
+        <dfn>Sequence Number</dfn>.
+      </p>
+      <pre class="example"
+        data-include="examples/intro-sequence.xml"
+        data-include-format="text">
+      </pre>
+      <p>
+        The concept of sequence identification is separate to
+        service identification.
+        Document metadata may be used to allow authors to
+        identify the services for which
+        the sequence is intended to carry subtitles,
+        also known as the broadcast channel etc.
+      </p>
+      <p>
+        Sequences of live documents are transferred between
+        <dfn>Nodes</dfn>.
+        Such transfers are called
+        <dfn>Streams</dfn>.
+        Nodes can consume, process and/or output Documents.
+        Different types of Node can send or receive varying numbers of
+        Streams to or from other Nodes.
+        Some examples are shown below.
+      </p>
+      <p>
+        <dfn>Processing Nodes</dfn>
+        output sequences that differ or may differ from those at the input.
+        An authoring station or a spellchecker are examples of processing nodes.
+      </p>
+      <p>
+        <dfn>Passive Nodes</dfn>
+        simply receive and optionally pass on sequences
+        from input to output without modifying
+        the content of any document in the sequence.
+        A distributing node or an encoder are examples of passive nodes.
+      </p>
+      <p>
+        Documents can use different types of timing.
+        Only one Document can be active at any given time.
+        If different Documents overlap in time,
+        the Document with the highest Sequence number ‘wins’.
+      </p>
+      <div class="note">
+        <p>
+          When a document includes explicit times using the 
+          <code>begin</code>, <code>end</code> or <code>dur</code>
+          attributes, and is available before its begin time, 
+          it becomes active
+          at its begin time, 
+          until the next document is active, 
+          or it reaches its end.
+        </p>
+        <p>
+          Documents may be sent before they become active;
+          documents may be re evaluated later,
+          for example to archive a corrected version of
+          the subtitles after broadcast,
+          or to retain precise timings from source documents.
+        </p>
+      </div>
+      <div class="note">
+        <p>
+          If no <code>begin</code> or <code>end</code> attributes 
+          are set in the Document,
+          subtitles will be active as soon as they are received,
+          until the next Document is active or the <code>dur</code>
+          on the <code>body</code> element has been reached, if set.
+        </p>
+        <p>
+          The typical use case is sending subtitles as fast as possible
+          for live subtitling.
+          This simple scheme may not be optimal,
+          because it does not support all the possible use cases,
+          for example creating archive versions is more difficult.
+        </p>
+      </div>
+      <figure id="use-case-figure">
+        <img src="images/use-case-author-to-encoder-with-embedded.svg" alt="">
+        <figcaption>
+          Schematic of use case showing an authoring tool
+          generating a stream of TTML Live subtitles.
+        </figcaption>
+      </figure>
+      <div class="note">
+        <p>
+          <a href="#use-case-figure"></a> illustrates a simple example use case
+          in which a subtitler uses an authoring tool
+          to create a stream of live subtitles.
+          Those are then transferred either:
+        </p>
+        <ol>
+          <li>via a direct IP connection to an Improver
+            and then on to an encoder; or</li>
+          <li>embedded into an audio/visual stream with an inserter
+            and then de-embedded for passing to an encoder.</li>
+        </ol>
+        <p>
+          A potential addition to this workflow would be
+          an additional connection
+          for example from the Improver to an Archiver to create an
+          archive [[TTML1]] document for later reuse.
+        </p>
+      </div>
+      <p>
+        The Improver defined in this document is a processing node that could,
+        for example, insert a defined compensating delay,
+        check content for correct spelling,
+        ensure that prohibited code points are not propagated or
+        perform other transformations to generate output suitable for encoding.
+      </p>
+    </section> <!-- intro-summary -->
+    <section id="intro-scenarios">
+      <h3>Example scenarios</h3>
+      <p>
+        The following examples represent typical real world scenarios
+        in which documents and nodes that conform to this specification
+        can be used.
+      </p>
+      <section id="intro-scenario-handover">
+        <h4>Handover orchestration</h4>
+        <p>
+          Each subtitler in a group authors subtitles
+          for part of a single programme;
+          each group member takes a turn to contribute
+          for a period of time before handing over to the next subtitler.
+        </p>
+        <p>
+          Each subtitler creates a distinct sequence of subtitles for their turn.
+          Each of those input sequences has a different sequence identifier.
+          The authoring stations emit the sequences as streams.
+          As part of an externally orchestrated handover process
+          a <a>handover manager</a> node receives all the streams,
+          combines them and emits a new continuous stream.
+          This new output stream’s sequence has a different sequence identifier
+          from each of the input sequences.
+        </p>
+        <p>
+          Incidentally, each subtitler may subscribe to,
+          and view the others’ streams to assist with the handover orchestration.
+        </p>
+      </section> <!-- intro-scenario-handover -->
+      <section id="intro-scenario-author-and-correct">
+        <h4>Author and correct</h4>
+        <p>
+          A pair of subtitlers authors and corrects live subtitles.
+          The first subtitler creates a sequence using an authoring tool.
+          The second subtitler receives a stream of that sequence and
+          manipulates an Improver Node that allows the sequence
+          to be modified and then issues a new sequence
+          with a different sequence identifier from the input sequence,
+          for consumption downstream.
+        </p>
+      </section> <!-- intro-scenario-author-and-correct -->
+      <section id="intro-scenario-timing-improvement">
+        <h4>Timing improvement</h4>
+        <p>
+          An Improver Node receives a stream and
+          a continuous audio track in a reference time frame.
+          The Improver analyses the audio and subtitles and
+          creates a new sequence whose contents are
+          time aligned relative to the audio track’s time frame,
+          using time stamps from a common clock source.
+          The new sequence is issued as a stream with a new sequence identifier.
+        </p>
+      </section> <!-- intro-scenario-timing-improvement -->
+      <section id="intro-scenario-retrospective-corrections">
+        <h4>Retrospective Corrections</h4>
+        <p>
+          A subtitler authors a live subtitle stream whose sequence
+          is archived for later reuse.
+          On noticing an error the subtitler issues
+          a retrospectively timed correction.
+          The archive process uses data within the sequence
+          to apply the correction such that
+          the error it corrects is not apparent
+          within the generated archive document.
+        </p>
+      </section> <!-- intro-scenario-retrospective-corrections -->
+    </section> <!-- intro-scenarios -->
+  </section> <!-- introduction -->
+
+  <section id="terms" class="informative">
+    <h2>Terms and Definitions</h2>
+
+    <p>The terms and definitions are as defined in the 
+      TTML Live Extensions Module, reproduced here for convenience.
+    </p>
+    
+    <p>
+      <dfn>Author</dfn>
+      a person or system that creates a stream
+      of live subtitle data based on observations of some other media,
+      for example by listening to a programme audio track.
+    </p>
+
+    <p>
+      <dfn data-lt="Caption|Captions|Subtitle|Subtitles">Captions and subtitles</dfn>
+      The term “captions” describes on screen text for use
+      by deaf and hard of hearing audiences.
+      Captions include indications of the speakers and relevant sound effects.
+      The term “subtitles” describes on screen text for translation purposes.
+      For easier reading only the term “subtitles” is used
+      in this specification as the representation of captions and subtitles
+      is the same here.
+      In this specification the term “captions” is used
+      interchangeably with the term “subtitles” (except where noted).
+    </p>
+
+    <p>
+      <dfn>Carriage Mechanism</dfn>
+      a mechanism by which <a>physical streams</a> may be transferred between
+      <a>nodes</a>.
+    </p>
+    
+    <p>
+      <dfn>Document</dfn>
+      A subtitle document conformant to this specification.
+    </p>
+
+    <p>
+      <dfn data-lt="document availability time|availability time">Document availability time</dfn>
+      The time when a document becomes available for processing.
+    </p>
+
+    <p>
+      <dfn>Document cache</dfn>
+      The set of documents retained by a node, for example for processing.
+      See also <a href="#pruning-history"></a>.
+    </p>
+
+    <div>
+      <p>
+      <dfn>Document resolved begin time</dfn>
+        The time when a document becomes active during a presentation.
+      </p>
+      <p class="note">
+        This term is used in the same sense as "resolved begin time" is used
+        in [[SMIL3]],
+        when applied to a document and is further defined in
+        the TTML Live Extensions Module</a>.
+      </p>
+    </div>
+
+    <div>
+      <p>
+        <dfn>Document resolved end time</dfn>
+        The time when a document becomes inactive during a presentation.
+      </p>
+      <p class="note">
+        This term is used in the same sense as "resolved end time" is used in
+        [[SMIL3]] when applied to a document and is further defined in
+        the TTML Live Extensions Module</a>.
+      </p>
+    </div>
+    
+    <div>
+      <p>
+        <dfn>Encoder</dfn>
+        a system that receives a stream of live subtitle data
+        and somehow encodes it into a format suitable for use downstream,
+        for example EBU-TT-D.
+      </p>
+      <p class="note">
+        Some encoders may also package the encoded output data into
+        other types of stream e.g. MPEG DASH.
+      </p>
+    </div>
+
+    <p>
+      <dfn>Inserter</dfn>
+      A unit that embeds subtitle data into an audio/visual stream.
+      This is in common use in current subtitling architectures.
+    </p>
+
+    <p>
+      <dfn>Live Document</dfn>
+      Any entity defined to be a Live Document by a W3C specification,
+      including all <a>Documents</a> defined in this specification.
+    </p>
+
+    <p>
+      <dfn>Node</dfn>
+      A unit that creates, emits, receives
+      or processes one or more sequences.
+    </p>
+
+    <p>
+      <dfn>Node identifier</dfn>
+      The unique identifier of a Node.
+    </p>
+
+    <p>
+      <dfn>Presentation</dfn>
+      In this document the term 'presentation' is used in
+      the sense in which it is used in [[SMIL3]].
+    </p>
+
+    <p>
+      <dfn>Presentation Processor</dfn>
+      as defined in [[TTML1]]: 
+      <blockquote>
+        A Content Processor which purpose is
+        to layout, format, and render,
+        i.e., to present,
+        Timed Text Markup Language content by applying
+        the presentation semantics defined in this specification.
+      </blockquote>
+    </p>
+
+    <p>
+      <dfn>Processing Context</dfn>
+      The configuration and operating parameters of
+      a <a>node</a> that processes a <a>document</a>.</p>
+
+    <p>
+      <dfn>Root Temporal Extent</dfn>
+      As defined in [[TTML1]].
+    </p>
+    
+    <p>
+      <dfn>Sequence</dfn>
+      A set of related <a>live documents</a>
+      each of which shares the same sequence identifier,
+      for example the documents that
+      define the subtitles for a single programme.
+    </p>
+
+    <p>
+      <dfn>Sequence Begin</dfn>
+      The start of the interval in which
+      a <a>sequence</a> is presented is referred to as the sequence begin.
+      Equivalent to the document begin [[SMIL3]] of
+      the first <a>document</a> in the <a>sequence</a>.</p>
+
+    <p>
+      <dfn>Sequence End</dfn>
+      The end of the interval in which
+      a <a>sequence</a> is presented is referred to as the sequence end.
+      Equivalent to the document end [[SMIL3]] of
+      the last <a>document</a> in the <a>sequence</a>.
+    </p>
+
+    <p>
+      <dfn>Sequence Duration</dfn>
+      The difference between the
+      <a>sequence end</a>
+      and the
+      <a>sequence begin</a> is referred to as the sequence duration.
+    </p>
+
+    <p>
+      <dfn>Service identifier</dfn>
+      An identifier used to uniquely identify a broadcast service,
+      for example the HD broadcast of the broadcaster’s main channel.
+    </p>
+
+    <p>
+      <dfn>Stream</dfn>
+      The transfer of a <a>sequence</a> between two <a>nodes</a>.
+    </p>
+
+    <p>
+      <dfn>Logical stream</dfn>
+      A <a>stream</a> offered or provided by
+      a <a>node</a> to zero or more <a>nodes</a>;
+      identified by the source <a>node identifier</a>
+      and <a>sequence identifier</a>.
+    </p>
+
+    <p>
+      <dfn>Physical stream</dfn>
+      A <a>stream</a> provided between two <a>nodes</a>,
+      identified by the source <a>node identifier</a>,
+      destination <a>node identifier</a>
+      and <a>sequence identifier</a>.
+    </p>
+    
+    <p>
+      <dfn>TTML Live document</dfn>
+      A <a>live document</a> that is a valid TTML document instance.
+    </p>
+
+  </section> <!-- terms -->
+
+  <section id="timing-and-synchronisation" class="informative">
+    <h2>Timing and synchronisation</h2>
+    <p>
+      This section defines the temporal processing
+      of a <a>sequence</a> of <a>documents</a> within a presentation,
+      the management of delay in a live authoring environment
+      and the use of reference clocks.
+    </p>
+
+    <section id="document-resolved-times">
+      <h3>Document resolved begin and end times</h3>
+      <p>
+        Every <a>document</a> in a <a>sequence</a> has
+        a time period during which it is active
+        within a presentation, defined in [[TTML1]] as the
+        <a>Root Temporal Extent</a>.
+        At any single moment in time during the presentation
+        of a sequence either zero documents
+        or one document shall be active.
+        The period during which a document is active
+        begins at the <a>document resolved begin time</a>
+        and ends at the <a>document resolved end time</a>.
+      </p>
+
+      <p>
+        An algorithm for computing
+        the time when a document is active
+        during a presentation has the following variables to consider:
+      </p>
+      <ul>
+        <li>
+          The <em><a>document availability time</a></em>,
+          i.e. the time when each document becomes available.
+          In a live authoring scenario it is typical
+          for documents to become available during the presentation,
+          soon after they have been authored.
+          In a replay scenario all of the documents
+          may be available prior to the presentation beginning.
+        </li>
+        <li>
+          The <em><a>earliest computed begin time</a></em> in the document,
+          calculated from the <code>begin</code>
+          and <code>end</code> attribute values if present,
+          according to the semantics of [[TTML1]].
+        </li>
+        <li>
+          The <em><a>latest computed end time</a></em> in the document,
+          calculated from the <code>begin</code>
+          and <code>end</code> attribute values if present,
+          according to the semantics of [[TTML1]].
+        </li>
+        <li>
+          The value of the <code>dur</code> attribute if present
+          on the <code>tt:body</code> element.
+        </li>
+        <li>
+          The document <a>sequence number</a>.
+        </li>
+        <li>
+          Any <em>externally specified document activation
+            or deactivation times</em>, 
+          such as the beginning or end of sequence presentation.
+        </li>
+      </ul>
+
+      <p>
+        The definitions of the <a>document resolved begin time</a>
+        and the <a>document resolved end time</a>s below
+        are derived from the following rules:
+      </p>
+      <ol>
+        <li>
+          A document cannot become active until it is available,
+          at the earliest;
+        </li>
+        <li>
+          The absence of any begin time implies
+          that the document is active immediately;
+        </li>
+        <li>
+          The absence of any end time implies
+          that the document remains active indefinitely;
+        </li>
+        <li>
+          The <code>dur</code> attribute on the <code>tt:body</code> element
+          imposes a maximum document duration
+          relative to the point at which it became active.
+        </li>
+        <li>
+          If two documents would otherwise overlap temporally,
+          the document with the greater <a>sequence number</a>
+          supersedes the document with the lesser <a>sequence number</a>.
+        </li>
+      </ol>
+
+      <p class="note">
+        It is not necessary for all classes of processor
+        to resolve the document begin and end times.
+        For example a processing node that
+        checks text spelling only can do so
+        without reference to the timing constructs defined in this section.
+      </p>
+
+      <div class="note">
+        <p>
+          In general the document time base,
+          as specified by the <code>ttp:timeBase</code> attribute,
+          can be transformed within a processing context
+          to a value that can be compared with
+          externally specified document activation times,
+          for example the clock values when documents become available.
+          Implementations that process documents that set
+          <code>ttp:timeBase="smpte"</code> and
+          <code>ttp:markerMode="discontinuous"</code> would not be able
+          to assume the time values to be part of
+          a monotonically increasing clock,
+          but only as markers.
+          This scenario is common with timecodes.
+          TTML Live prohibits use of <code>ttp:timeBase="smpte"</code>;
+          to accommodate operational scenarios in which
+          SMPTE time code is in common use,
+          several strategies are available including:
+        </p>
+        <ol>
+          <li>
+            Use implicitly timed documents only,
+            with the functional limitations implied;
+          </li>
+          <li>
+            In both the producer and any consumers of documents,
+            use a common algorithm for converting time codes
+            to values on a commonly available reference clock;
+          </li>
+          <li>
+            Embed values from a commonly available continuous reference clock
+            (e.g. station clock, GPS, UTC etc)
+            into any associated media streams
+            and use those for synchronisation.
+          </li>
+        </ol>
+      </div>
+
+      <section id="definition-of-time-values">
+        <h5>
+          Definition of time values used for
+          resolving document begin and end times
+        </h5>
+
+        <p class="informative">
+          The rules for determining resolved begin and end times
+          in this section require comparison of times
+          that are potentially derived from different clock sources.
+          For example the <a>availability time</a> of a document
+          can be found by inspecting a local system clock whereas
+          the <a>earliest computed begin time</a> in the document
+          can be in a timebase relating to a different reference clock.
+        </p>
+
+        <p>
+          For the purpose of making these comparisons
+          the following times shall be converted
+          to values on the same timebase:
+        </p>
+        <ul>
+          <li>
+            <a>document availability time</a>;</li>
+          <li><a>earliest computed begin time</a> in the document;</li>
+          <li>any externally specified document activation begin time;</li>
+          <li><a>latest computed end time</a> in the document;</li>
+          <li>any externally specified document deactivation time.</li>
+        </ul>
+
+        <p>
+          The <dfn>earliest computed begin time</dfn> is defined as
+          the earlier of
+          a) the earliest computed begin time of any leaf element in the document
+          and b) the earliest computed time corresponding to
+          a specified <code>begin</code> attribute value on an element
+          that either has no <code>end</code> attribute 
+          or has an <code>end</code> attribute value that is
+          later than the <code>begin</code> attribute value.
+        </p>
+        <p class="note">
+          In the case that a root to leaf path contains
+          elements all of which omit a <code>begin</code> attribute value
+          this evaluates to the value zero on the document’s timebase.
+        </p>
+
+        <p>
+          The <dfn>latest computed end time</dfn> is defined as
+          the latest computed end time corresponding to
+          a specified <code>end</code> attribute value on an element
+          that either has no specified <code>begin</code> attribute
+          or has an <code>end</code> attribute value that is
+          later than the <code>begin</code> attribute value.
+        </p>
+        <p class="note">
+          In the case that a root to leaf path contains
+          elements all of which omit an <code>end</code> attribute
+          this evaluates to the [[SMIL3]] term <code>"undefined"</code>,
+          that is the latest computed end time is not determined,
+          and is effectively infinite for comparison purposes.
+        </p>
+
+        <p class="note">
+          It is syntactically permitted for an element
+          to have a <code>begin</code> attribute value that is
+          later than or equal to its <code>end</code> attribute value;
+          in this case normally the element would be considered
+          never to be active;
+          this is why such elements are excluded
+          from the calculation of the
+          <a>earliest computed begin time</a>
+          and the <a>latest computed end time</a>.
+        </p>
+
+        <p class="note">
+          The <code>dur</code> attribute is not used
+          when computing the latest computed end time
+          however it is used when computing the
+          <a>document resolved end time</a> relative to the 
+          <a>document resolved begin time</a>; see
+          <a>Document resolved end time</a>.
+        </p>
+
+        <p class="note">
+          See [[EBU-TT-Live-1-0]] Annex B for informative worked examples.
+        </p>
+
+        <p class="ednote">Bring the worked examples into this document.</p>
+
+        <p>
+          The TTML Live Extensions Module defines the
+          <a>document resolved begin time</a> and the
+          <a>document resolved end time</a> 
+          in accordance with these rules.
+        </p>
+
+        <p class="ednote">Bring in the worked examples from EBU-TT Live Annex C.</p>
+
+        <section id="issuing-strategies" class="informative">
+          <h4>Document creation and issuing strategies</h4>
+
+          <p>
+            The above rules allow for implementations
+            to use different strategies for
+            creating and issuing <a>sequences</a>.
+            See [[EBU-TT-Live-1-0]] § 2.3.1.4 for discussion of some of
+            the possible strategies and their potential usage.
+          </p>
+
+          <p class="ednote">Bring in issuing strategies text from EBU-TT Live § 2.3.1.4.</p>
+
+        </section> <!-- issuing strategies -->
+
+        <section id="implementation-considerations" class="informative">
+          <h4>Implementation and Operational Considerations</h4>
+
+          <section id="pruning-history">
+            <h5>Pruning ever-extending history</h5>
+            <p>
+              The model presented here allows infinite rewriting of
+              history backwards in time.
+              A new <a>document</a> can be sent that supersedes
+              an arbitrary set of previous documents
+              including a partially superseded document and
+              has a <a>document resolved begin time</a> that
+              falls at any point before,
+              within or after the previously received sequence times.
+              This presents a potential implementation difficulty,
+              since it is impossible in general to know
+              how many documents to retain,
+              and when it is safe to discard documents.
+              Typically it is useful for operational software designed
+              to run continuously to be able to manage its data usage requirements
+              to avoid growing forever.
+              The operational rules for managing data usage are referred to
+              below as the <dfn>retention semantics</dfn>.
+            </p>
+
+            <p>
+              This problem is however specific to the type of <a>node</a> and
+              the task that it needs to perform.
+              For example some <a>passive nodes</a> need
+              to keep only a transient set of <a>documents</a>,
+              since it is not expected to do more than minimal buffering,
+              say for the time it takes for a distributing node
+              to emit each received <a>document</a> to all subscribers.
+            </p>
+
+            <p>
+              <a>Processing nodes</a> may need to retain a longer history
+              depending on what they are doing.
+              A <a>delay node</a> needs to keep <a>documents</a> for at least
+              the <a>offset period</a> by which it is applying a delay.
+              The <a>retention semantics</a> for improver nodes
+              or synthesiser nodes
+              need to be defined based on the functions that
+              they are designed to perform.
+            </p>
+
+            <p>
+              Consumer nodes similarly need to
+              have some kind of defined <a>retention semantics</a>.
+              One useful strategy for an <a>encoder</a> is
+              to discard everything that has already been encoded
+              into an output format.
+              For example an [[ttml-imsc1.1]] encoder configured to
+              output an IMSC document every 5 seconds
+              could be configured regularly
+              to discard all <a>documents</a> whose
+              <a>document resolved end times</a> are earlier
+              than the begin time of the next required output document.
+            </p>
+
+            <p class="note">
+              The set of documents that a node retains is defined as the
+              <a>document cache</a>.
+            </p>
+
+          </section> <!-- pruning-history -->
+
+          <section id="synchronising-clocks" class="informative">
+            <h5>Synchronising clocks and handling non zero transit times </h5>
+
+            <p>
+              Consider a simple system in which
+              a subtitler authors explicitly timed subtitles using a
+              Producer Node, and
+              the resulting <a>sequence</a> is streamed immediately
+              to a Consumer node,
+              for example to encode into a downstream format
+              (<a href="#simple-use-case-1-figure"></a>).
+            </p>
+
+            <figure id="simple-use-case-1-figure">
+              <img src="images/use-case-1.svg" alt="">
+              <figcaption>
+                Simple system
+              </figcaption>
+            </figure>
+
+            <p>
+              If the producer node issues <a>documents</a>
+              with the intent of them being presented immediately,
+              and therefore specifies a begin time equal to
+              its perceived time ‘now’
+              perhaps with an end time 3 seconds later
+              and sends the document,
+              and it takes a non zero time D<sub>at</sub>
+              until the document becomes available
+              then the effective duration for which
+              the subtitles in the document are shown
+              will be reduced by D<sub>at</sub>.
+              This is because the <a>document resolved begin time</a>
+              will be the <a>availability time</a>,
+              but the <a>document resolved end time</a> is
+              the specified end time in the document.
+            </p>
+
+            <p>
+              This scenario can impact the effective reading speed needed
+              to read the text, but is opaque to the subtitle author,
+              who cannot in general know how long it will take
+              for each document to become available.
+              A similar effect is shown diagrammatically in
+              <a href="#time-graph-explicitly-timed-documents-figure"></a>
+              where the beginning of document 1 is truncated by late availability.
+            </p>
+            <p class="note">
+              Further discussion of this scenario can be found in
+              [[EBU-TT-Live-1-0]] §2.3.1.4.2.
+            </p>
+            
+            <figure id="time-graph-explicitly-timed-documents-figure">
+              <img src="images/time-graph-explicitly-timed-documents.svg" alt="">
+              <figcaption>
+                Diagram showing resolved begin and end times
+                for explicitly timed documents
+              </figcaption>
+            </figure>
+
+            <p>
+              The above scenario includes an implicit assumption
+              that the two <a>nodes</a> have somehow reached
+              a sufficiently close value for the current time,
+              that is, that they are synchronised.
+              Another cause of such a problem is
+              if that assumption is invalid
+              and the two nodes are in fact
+              not synchronised relative to each other.
+              For example, if a <a>document</a>’s duration is 1s
+              but the consumer node’s clock runs
+              1s or more later than the
+              producer node’s clock,
+              then even if the real D<sub>at</sub> were 0,
+              the consumer node would consider it to be 1s late
+              and the document’s content would never be consumed.
+            </p>
+
+            <p>
+              Strategies for identifying that two <a>nodes</a>
+              are not synchronised closely enough include:
+            </p>
+            <ul>
+              <li>Specifying the document creation date
+                and time using <code>ebuttm:documentCreationDate</code>
+                placed as a descendant of
+                <code>/tt:tt/tt:head/tt:metadata</code></li>
+              <li>
+                <div>
+                  <p>
+                    Specifying the document emission time
+                    by adding to the document an XML comment such as:
+                  </p>
+                  <pre class="xml">&lt;!-- ebutt3:emission_time: 12:13:14.15 --></pre>
+                  <p class="note">
+                    XML comments are excluded from the
+                    <code>fn:deep-equals</code> comparison of XML elements;
+                    therefore two otherwise similar documents that
+                    contain different comments are considered
+                    to be identical by the test defined in
+                    the System Model</a>.
+                    As a result, <a>passive nodes</a> can
+                    add such comments without breaking
+                    passive node conformance requirements.
+                  </p>
+                  <p class="note">
+                    No formal syntax for this
+                    or any other XML comment is defined in this document.
+                  </p>
+                </div>
+              </li>
+            </ul>
+
+            <p>
+              Using either or both of these methods,
+              some potential problems can be identified.
+              In scenarios where the relationship between creation time,
+              emission time and availability time can be modelled consistently,
+              variations over time can highlight issues.
+            </p>
+
+            <p>
+              These data can also reveal if document times
+              were in the future when the document was created
+              and in the past when it became available downstream,
+              which can cause truncation of
+              the beginning of subtitle presentation as described above.
+              They can also provide some information about
+              where the delay might have occurred.
+            </p>
+
+            <p>
+              Strategies for dealing with these practical challenges include:
+            </p>
+            <ul>
+              <li>
+                Ensuring all <a>nodes</a> use clocks synchronised
+                to the same time reference
+                (for example an NTP server, a GPS receiver etc).
+              </li>
+              <li>
+                If using a local time, specifying the time server’s URL
+                in the <code>ebuttp:referenceClockIdentifier</code> parameter
+                in documents, and using it.
+              </li>
+              <li>
+                <p>
+                  Explicitly adding a delay to the begin times of documents
+                  either before emitting them
+                  or downstream
+                  (perhaps using a 
+                  <a>Retiming Delay node</a>),
+                  where the <a>offset period</a> is
+                  greater than or equal to D<sub>at</sub>.
+                </p>
+                <p class="note">
+                  This scenario only applies to
+                  explicitly timed documents,
+                  and a <a>Retiming Delay node</a> that performs this function
+                  is not expected both to adjust document times
+                  <em>and</em> to delay emission of the adjusted documents,
+                  since that would simply reintroduce
+                  a new availability time delay.
+                </p>
+              </li>
+            </ul>
+
+            <p class="note">
+              In this discussion,
+              the term “clock” is used to indicate the time source
+              that is used to convert between real time events
+              such as documents becoming available
+              and times in the document’s timebase.
+              There is no requirement that
+              this is directly related to any system clock.
+            </p>
+          </section> <!-- synchronising-clocks -->
+
+        </section> <!-- implementation-considerations -->
+
+      </section> <!-- definition-of-time-values -->
+
+    </section> <!-- document-resolved-times -->
+
+    <section id="management-of-delay" class="informative">
+      <h3>Management and signalling of delay in a live authoring environment</h3>
+      <p>
+        [[EBU-TT-Live-1-0]] § 2.3.2 provides further analysis of how
+        the delays within real world systems can be managed so that the
+        decoded output of the overall system offers live subtitles
+        synchronised with the audio to which they relate.
+      </p>
+      <p>
+        [[EBU-TT-Live-1-0]] § 2.3.3 describes how the
+        <code>ebuttm:authoringDelay</code> metadata attribute defined in
+        [[EBU-TT-M]] can be used to express the latency associated with the
+        authoring process.
+      </p>
+
+      <p class="ednote">Bring in delay management text from EBU-TT Live §2.3.2 and §2.3.3.</p>
+    </section> <!-- management-of-delay -->
+
+    <section id="delay-nodes">
+      <h3>Delay nodes</h3>
+      <p>
+        An Improver Node that applies an adjustment delay
+        is referred to as a
+        <dfn data-lt="delay node|delay">Delay Node</dfn>.
+        The adjustment delay applied is known as the
+        <dfn>offset period</dfn>.
+        A <a>Delay Node</a> could be one part of
+        a solution for achieving resynchronisation.
+        The value of the delay might be derived using
+        one of a variety of techniques, including potentially:
+      </p>
+      <ul>
+        <li>
+          heuristics based on <code>ebuttm:authoringDelay</code>,
+          and other metadata in the stream
+          for example the method used to author the subtitles;
+        </li>
+        <li>
+          knowledge of the typical delay within the broadcast chain;
+        </li>
+        <li>
+          a comparative measurement using audio analysis
+          to establish a varying value adjustment delay
+          based on the actual subtitles
+          and speech within the programme content.
+        </li>
+      </ul>
+      <p class="note">
+        It is out of scope of this document
+        to mandate the use of specific techniques;
+        furthermore it is expected that
+        the relative success of these techniques
+        will depend on programme content,
+        the level of variability in the chain
+        and the quality of implementation of each technique.
+      </p>
+      <p class="note">
+        Any node that receives and emits streams is
+        likely to incur some real world processing delay;
+        a <a>Delay node</a> is intended to apply a controlled relative
+        <em>adjustment</em> delay.
+      </p>
+
+      <p>
+        Two types of <a>Delay Node</a> for applying a delay are specified:
+      </p>
+      <ul>
+        <li>
+          A <a>Buffer Delay Node</a>
+            buffers each received <a>Document</a>
+            and emits it after a non negative delay <a>offset period</a>.
+            Since this is essentially equivalent to
+            a longer carriage latency
+            no modification to the documents is required.
+            The <a>Buffer Delay Node</a> increases the <a>availability time</a>
+            of the documents received by <a>Nodes</a> receiving the sequence
+            (downstream).
+            It is primarily intended for delaying
+            implicitly timed documents.</li>
+        <li>
+          A <a>Retiming Delay Node</a> modifies the times
+          within each <a>Document</a>
+          and issues them
+          without further emission delay
+          as part of a new <a>sequence</a> with
+          a new <a>sequence identifier</a>.
+          The times are modified such that all of
+          the computed begin and end times within the document
+          are increased by a non negative delay <a>offset period</a>.
+          The Retiming Delay Node is primarily intended
+          for delaying explicitly timed documents.</li>
+      </ul>
+      <div class="note">
+        <p>
+          If it is operationally required
+          to use both types of <a>delay node</a>
+          then a chain of nodes can be constructed
+          in which both a <a>Buffer Delay Node</a>
+          and a <a>Retiming Delay Node</a>
+          are connected “in series” with each other.
+        </p>
+        <p>
+          Since the requirements for <a>nodes</a> here are
+          logical definitions a real world processor could combine
+          both functions.
+        </p>
+      </div>
+
+      <section id="buffer-delay-node">
+        <h4><dfn data-lt="buffer delay node|buffer delay">Buffer Delay Node</dfn></h4>
+        <p>
+          The following behaviours of a Buffer Delay node are defined,
+          in relation to the <a>sequences</a> that they receive and emit:
+        </p>
+        <ol>
+          <li>
+            A <a>Buffer Delay node</a> is a <a>passive node</a>.
+            Therefore the output documents shall
+            be identical to the input documents.</li>
+          <li>
+            A <a>Buffer Delay node</a> shall 
+            delay emission of the stream by a period
+            not less than the <a>offset period</a>.
+          </li>
+          <li>
+            The <a>offset period</a> shall not be negative.
+          </li>
+        </ol>
+
+        <p class="note">
+          In the context of a <a>buffer delay node</a>
+          a negative <a>offset period</a> would require documents
+          to be emitted before they had arrived.
+          No practical device has yet been demonstrated that can
+          achieve this in the general case.
+        </p>
+      </section> <!-- buffer-delay-node -->
+
+      <section id="retiming-delay-node">
+        <h4>
+          <dfn data-lt="retiming delay node|retiming delay">Retiming Delay Node</dfn>
+        </h4>
+        <p>
+          The following behaviours of a Retiming Delay node are defined
+          in relation to the <a>sequences</a> that
+          they receive, process and emit:
+        </p>
+        <ol>
+          <li>
+            A <a>Retiming Delay node</a> is a <a>processing node</a>.
+            Therefore the output <a>sequence</a>
+            shall have a different <a>sequence identifier</a>
+            from the input <a>sequence</a>.
+          </li>
+          <li>
+            A <a>Retiming Delay node</a>
+            shall modify each <a>document</a>
+            to result in the document’s computed times
+            being increased by the <a>offset period</a>.
+            <p class="note">
+              In general this results in
+              implicitly timed documents being converted
+              to explicitly timed documents,
+              since all but a zero <a>offset period</a> requires at a minimum
+              a <code>begin</code> attribute on an element,
+              for example the <code>tt:body</code> element.
+              This behaviour may be surprising.</p></li>
+          <li>
+            The <a>offset period</a> shall not be negative.
+          </li>
+          <li>
+            A <a>Retiming Delay node</a> should not
+            emit an output sequence with reordered subtitles.
+          </li>
+          <li>
+            A <a>Retiming Delay node</a> shall not
+            update the value of <code>ebuttm:authoringDelay</code>,
+            if present.
+          </li>
+          <li>
+            A <a>Retiming Delay node</a> should
+            add an <code>ebuttm:appliedProcessing</code> element
+            to the document metadata
+            to indicate that the delay has been added.
+          </li>
+        </ol>
+
+        <p class="note">
+          In the context of a <a>retiming delay node</a>,
+          applying a negative <a>offset period</a> could result in
+          documents having negative <code>begin</code> attribute values,
+          which is not permitted in TTML.
+        </p>
+
+        <p class="note">
+          It is possible that delay functionality is combined with
+          other processing in a single <a>node</a>, for example an accumulator;
+          hence the requirement not to reorder is expressed in terms of
+          subtitles not documents:
+          there is for example no requirement that there is
+          a 1:1 relationship between input and output documents
+          from a <a>Retiming Delay node</a>,
+          though such a relationship would be expected
+          for the simplest conceivable Retiming Delay.
+        </p>
+
+        <p class="note">
+          If varying the delay <a>offset period</a>,
+          take care to manage the other timings
+          to avoid inadvertently changing
+          the displayed order of subtitles;
+          for example one strategy could be
+          to treat delay <a>offset period</a> changes as
+          target values that are arrived at over a fixed period,
+          so instead of jumping from, say, 10s to 4s in one step
+          an implementation could gradually reduce the offset
+          from 10s to 4s over, say, a 6s period.
+          Another strategy when the delay varies is
+          to allow the node (or a downstream node)
+          to apply its own logic,
+          which could result in documents being skipped
+          to achieve the desired synchronisation.
+        </p>
+      </section> <!-- retiming-delay-node -->
+
+    </section> <!-- delay-nodes -->
+
+    <section id="reference-clocks">
+      <h3>Reference clocks</h3>
+      <p>
+        Some broadcast environments do not relate time expressions
+        to a real world clock such as UTC but
+        to some other generic reference clock
+        such as a studio timecode generator.
+        When <code>ttp:timebase="clock"</code> is used and
+        <code>ttp:clockMode="local"</code>,
+        the <code>ebuttp:referenceClockIdentifier</code> parameter
+        may be specified on the <code>tt:tt</code> element
+        to identify the source of this reference clock
+        to allow for correct synchronisation.
+      </p>
+
+      <p class="note">
+        For real time processing of <a>TTML Live documents</a>
+        correct dereferencing of the external clock
+        is a processing requirement,
+        therefore the <code>referenceClockIdentifier</code>
+        is defined as a parameter attribute in the <code>ebuttp</code>
+        parameter namespace.
+        This is in contrast to the
+        <code>referenceClockIdentifier</code> element
+        in the <code>ebuttm</code> metadata namespace defined by [[EBU-TT-M]].
+        A TTML document instance created as an archive version of
+        a <a>sequence</a> of
+        <a>live documents</a> can preserve the value of the
+        <code>ebuttp:referenceClockIdentifier</code>  parameter attribute in a
+        <code>ebuttm:referenceClockIdentifier</code> element.
+      </p>
+    </section> <!-- reference-clocks -->
+
+  </section> <!-- timing-and-synchronisation -->
+
+  <section id="handover" class="informative">
+    <h2>Handover</h2>
+    <p>
+      In a live subtitle authoring environment it is common practice for
+      multiple subtitlers to collaborate with each other
+      in the creation of subtitles for a single programme.
+      From an encoder perspective,
+      it is desirable to manage only a single stream of live subtitles.
+      To mediate between the streams that each subtitler creates
+      we will refer to a <a>Handover Manager</a> node. See
+      <a href="#handover-figure"></a>.
+    </p>
+    <p>
+      The 
+      <dfn data-lt="handover manager node|handover manager">Handover Manager</dfn>
+      subscribes to
+      a set of <a>sequences</a>
+      and selects <a>documents</a> from one <a>sequence</a> at a time,
+      switching between <a>sequences</a> dependent on
+      parameters within the <a>documents</a>.
+      It then emits a new <a>sequence</a> of <a>documents</a> representing
+      the time interleaved combination of subtitles from each of the authors,
+      where each output <a>document</a> is derived from
+      an input <a>document</a> from the selected sequence.
+      See also <a href="#handover-sequences-figure"></a>
+      for an example of handover sequences.
+    </p>
+    <p>
+      The <a>Handover Manager node</a> shall use
+      a 'who claimed control most recently' algorithm
+      for selecting the <a>sequence</a>,
+      based on a control token parameter within each document.
+    </p>
+
+    <figure id="handover-figure">
+      <img src="images/handover.svg" alt="">
+      <figcaption>
+        Use case showing a <a>Handover Manager</a> selecting between
+        Sequences A and B and emitting Sequence C
+      </figcaption>
+    </figure>
+
+    <div class="note">
+      <p>
+        Authoring tools can subscribe to the output <a>stream</a>
+        from the <a>Handover Manager</a>;
+        this makes the control token parameter values
+        visible to them to permit each
+        to direct the <a>Handover Manager</a>
+        to switch to their output;
+        it also facilitates monitoring.
+      </p>
+      <p>
+        Other schemes for directing handover are possible,
+        for example the control token could be derived from
+        a separate mediation source or the clock.
+      </p>
+    </div>
+
+    <section id="authors-group-parameters">
+      <h4>Authors Group parameters</h4>
+      <p>
+        The following parameters on the <code>tt:tt</code> element are provided
+        to facilitate handover:
+      </p>
+
+      <p>
+        The <code>ebuttp:authorsGroupIdentifier</code> is a string
+        that identifies the group of authors
+        from which a particular <a>Handover Manager</a> can choose.
+        A <a>Handover Manager</a> should be configured
+        to subscribe to all the <a>streams</a>
+        whose <a>documents</a> have the same
+        <code>ebuttp:authorsGroupIdentifier</code>
+        except for its own output stream.
+        Within a single <a>sequence</a>,
+        all <a>documents</a> that contain the element
+        <code>ebuttp:authorsGroupIdentifier</code> shall have the same
+        <code>ebuttp:authorsGroupIdentifier</code>.
+      </p>
+
+      <p>
+        The <a>Handover Manager</a> may include within each <a>document</a>
+        in its output <a>sequence</a> the parameter attributes
+        <code>ebuttp:authorsGroupIdentifier</code> and
+        <code>ebuttp:authorsGroupControlToken</code>
+        from the current selected sequence.
+        The <a>Handover Manager</a> includes within each output <a>document</a>
+        the metadata attribute
+        <code>ebuttm:authorsGroupSelectedSequenceIdentifier</code> [[EBU-TT-M]]
+        set to the value of the source sequence’s 
+        <a>sequence identifier</a> for that <a>document</a>.
+        This is so that each subscriber
+        to the <a>Handover Manager</a>'s output stream
+        can know the current status,
+        including any subscribed subtitle authoring stations.
+      </p>
+
+      <p>
+        The <a>Handover Manager</a>’s normative behaviour is defined
+        in <a href="#handover-manager-algorithm"></a>.
+      </p>
+
+      <p>
+        When present in a <a>document</a>,
+        the <code>ebuttp:authorsGroupControlToken</code> is a number
+        that the <a>Handover Manager</a> uses to identify which <a>sequence</a>
+        to select: when a <a>document</a> is received with a higher value
+        <code>ebuttp:authorsGroupControlToken</code>
+        than that most recently received
+        in the current selected sequence
+        the <a>Handover Manager</a> switches to
+        that <a>document</a>'s <a>sequence</a>,
+        that is, it emits a <a>document</a> in its output <a>sequence</a>
+        corresponding to and derived from the received <a>document</a>
+        with the new control token without delay.
+      </p>
+
+      <p>
+        Having selected a <a>sequence</a>,
+        the <a>Handover Manager</a> emits
+        further documents derived from that sequence
+        until a new sequence is selected.
+      </p>
+
+      <p class="note">
+        This means that the control token value can be lowered
+        after taking control,
+        by setting the control token value in a new document
+        in the selected sequence to a lower number.
+        Therefore the control token value does not need to increase forever.
+      </p>
+
+      <p>
+        Regardless of the selected sequence,
+        the <a>Handover Manager</a> does not emit any <a>documents</a>
+        derived from input sequence documents that do not contain both
+        the parameters <code>ebuttp:authorsGroupIdentifier</code> and
+        <code>ebuttp:authorsGroupControlToken</code>.
+      </p>
+
+      <p class="note">
+        Care should be taken if the <a>carriage mechanism</a> does not
+        guarantee delivery of every <a>document</a> in the <a>sequence</a>
+        in case a document intended to take control is lost.
+        One strategy for avoiding this would be
+        for the subtitle authoring station
+        to observe the <a>Handover Manager</a>'s output and
+        verify that control has been taken
+        before lowering the control token value.
+        Another strategy would be
+        to maintain the high control token value and
+        duplicate it in each document in the <a>sequence</a>
+        until the sequence switch has been verified
+        through another mechanism.
+      </p>
+
+      <figure id="handover-sequences-figure">
+        <img src="images/handover-sequences.svg" alt="">
+        <figcaption>
+          Sample sequences demonstrating Handover
+        </figcaption>
+      </figure>
+    </section> <!-- authors-group-parameters -->
+
+    <section id="handover-manager-algorithm">
+      <h4>Handover Manager algorithm</h4>
+      <p>The <a>Handover Manager</a> node uses a
+        'who claimed control most recently' algorithm
+        for selecting the sequence,
+        based on the control token parameter present within each document,
+        as defined in the TTML Live Extensions Module.</p>
+
+    </section> <!-- handover-manager-algorithm -->
+
+    <section id="handover-manager-practical-considerations">
+      <h4>Practical considerations for Handover Manager implementations</h4>
+      <p>
+        A <a>Handover Manager</a> is likely to be used
+        to switch between multiple contributors of live subtitles
+        for a single service or broadcast channel.
+        In this situation each author might be able
+        to configure within their production system some metadata
+        to be included in the TTML Live <a>sequence</a>
+        such as the <code>ebuttm:broadcastServiceIdentifier</code> element.
+        In production environments a <a>Handover Manager</a> should check that
+        the input <a>streams</a> are consistent with each other,
+        taking into account possible “emergency” scenarios
+        where a live subtitle author needs to step in at short notice and
+        may not have the opportunity to make such configurations.
+      </p>
+
+      <p>
+        The Handover Manager produces a single <a>sequence</a> derived from
+        multiple input <a>sequences</a>.
+        However the System Model requires that
+        every <a>document</a> in a <a>sequence</a> has the same timing model.
+        This implies that practical arrangements need to be made
+        to ensure that the <a>Handover Manager</a>’s
+        output sequence is conformant.
+        These could include arranging for all input sequences
+        to have the same timing model,
+        or including within the Handover Manager
+        a timing model converter that can
+        set the output documents’ timing model correctly
+        independently of the input documents’ timing models.
+        Such a converter might need access to external time sources.
+      </p>
+    </section> <!-- handover-manager-practical-considerations -->
+
+  </section> <!-- handover -->
+
+  <section id="facets" class="informative">
+    <h3>Describing facets of the subtitle content</h3>
+    <p>
+      In a chain of processing nodes each might modify the subtitle content
+      to suit some particular need.
+      For example the subtitler's priority could be
+      to issue new <a>documents</a> as quickly as possible
+      without considering spelling, grammatical correction, profanities etc.
+      Alternatively the subtitler could be
+      issuing a <a>sequence</a> that is known
+      not to be suitable without modification for all downstream platforms:
+      one <a>encoder</a> could be able to emit Unicode code points [[UNICODE]];
+      another could be restricted to ISO/IEC 8859-x.
+      A combination of these scenarios is possible.
+      In order to complete the processing needed
+      to ensure that a <a>stream</a> is suitable,
+      the system model presented here proposes that
+      a series of Improver nodes would be used
+      to perform the necessary processing.
+    </p>
+    <p>
+      However from a Consumer node's perspective
+      it is not always desirable to rely on the node configuration
+      being correct without further information.
+      Additionally for compliance monitoring automated processes
+      could be used to assess conformance against some rule set
+      without necessarily enforcing it or making modifications
+      to the text content in the <a>sequence</a>.
+    </p>
+    <p>
+      Some knowledge of the processing applied
+      can be indicated at a <a>document</a> level
+      using the debug <code>ebuttm:appliedProcessing</code> element [[EBU-TT-M]]
+      (see <a href="#tracing-and-debugging"></a>)
+      however this is coarse grained.
+      To indicate for a particular piece of content
+      some aspect of its editorial or technical quality,
+      for example if it has been spellchecked, profanity checked,
+      had its code point set reduced for downstream compatibility,
+      had colours applied, been positioned etc.
+      the <code>ebuttm:facet</code> element [[EBU-TT-M]] can be applied.
+      To indicate the document level summary the
+      <code>ebuttm:documentFacet</code> element [[EBU-TT-M]] can be applied.
+    </p>
+  </section> <!-- facets -->
+
+  <section id="tracing-and-debugging" class="informative">
+    <h3>Tracing and debugging</h3>
+    <p>
+      The model presented here allows for multiple <a>Processing Nodes</a>
+      to receive and emit <a>streams</a>.
+      In real world scenarios it can be useful
+      to log the activity that generated a <a>document</a>
+      for audit or debugging purposes,
+      for example to check that the correct configurations have been applied.
+    </p>
+
+    <p>
+      The <code>ebuttm:appliedProcessing</code> element [[EBU-TT-M]]
+      permits such logging.
+      If present, an <code>ebuttm:appliedProcessing</code> element describes
+      in text the action that generated the <a>document</a>,
+      in the <code>@action</code> attribute,
+      and an identifier that performed that action,
+      in the <code>@generatedBy</code> attribute.
+      The action can be derived from a classification scheme not specified here.
+      The <code>@generatedBy</code> node identifier is an URI and
+      is also not further defined here.
+    </p>
+
+    <p>
+      Optionally the <code>ebuttm:appliedProcessing</code> element can
+      identify the <a>node</a> that supplied the source content for the action,
+      using the <code>@sourceId</code> attribute.
+    </p>
+
+    <p>
+      The <code>ebuttm:appliedProcessing</code> element can contain
+      text content providing any further logging information.
+    </p>
+  </section> <!-- tracing-and-debugging -->
+
+  </body>
+</html>

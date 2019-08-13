@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>TTML Live Carriage over WebSocket</title>
+    <script
+     src='https://www.w3.org/Tools/respec/respec-w3c-common'
+     class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "FPWD"
+        , processVersion: "2019"
+        , editors: [{
+          name: "Nigel Megitt",
+          w3cid: "64750",
+          mailto: "nigel.megitt@bbc.co.uk",
+        }]
+        , wg: "Timed Text Working Group"
+        , wgURI: "https://www.w3.org/AudioVideo/TT/"
+        , wgPublicList: "public-tt"
+        , wgPatentURI: "https://www.w3.org/2004/01/pp-impl/34314/status"
+        , subjectPrefix: "[tt-live-websocket-1]"
+        , edDraftURI: "https://w3c.github.io/tt-module-live/tt-live1/spec/carriage/tt-live-carriage-WebSocket.html"
+        , github: {
+            repoURL : "https://github.com/w3c/tt-module-live/",
+            branch : "master"
+          }
+        ,   license: "w3c"
+        , shortName: "tt-live-websocket-carriage-1"
+        , localBiblio: {
+          "OPENSTD": {
+            publisher: "OpenStand",
+            href: "https://open-stand.org/about-us/principles/",
+            title: "Open Stand Principles"
+          },
+          "ANDR-API": {
+            publisher: "Advanced Media Workflow Association (AMWA)",
+            href: "https://github.com/AMWA-TV/nmos",
+            title: "AMWA NMOS Discovery and Registration API"
+          },
+          "JT-NM": {
+            publisher: "Joint Task Force on Networked Media (JT-NM)",
+            href: "http://jt-nm.org/RA-1.0/JT-NMReferenceArchitecturev1.0%20150904%20FINAL.pdf",
+            title: "Reference Architecture v1.0"
+          },
+          "TTML-LIVE": {
+            publisher: "W3C",
+            href: "URL to be defined",
+            title: "TTML Live contribution extensions (member submission)"
+          },
+          "WAMP": {
+            publisher: "Crossbar.io",
+            href: "https://wamp-proto.org/",
+            title: "Web Application Messaging Protocol"
+          }
+        }
+      };
+    </script>
+    <style>
+      span.label {
+        display: inline-block;
+        border-radius: 3px;
+        padding-left: 2px;
+        padding-right: 2px;
+      }
+      span.required-attr, tr.required-attr {
+        background-color: #eeeeee !important;
+      }
+    </style>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+        This submission describes how TTML Live documents can be carried
+        from node to node using WebSocket connections.
+      </p>
+      <p>
+        This document is based on [[EBU-TT-Live-WS]] where 
+        any basis on [[EBU-TT-Live-1-0]] has been re-based on the
+        accompanying submission defining TTML Live Contribution extensions,
+        [[TTML-LIVE]].
+      </p>
+      <p>
+        These works were originally
+        developed by <a href="https://tech.ebu.ch/home">EBU</a> and
+        benefit from technical consensus and implementation experience
+        gathered there.
+      </p>
+    </section> <!-- abstract -->
+
+    <section id='sotd'>
+      <p>
+      </p>
+    </section> <!-- sotd -->
+
+    <section id="scope" class="informative">
+      <h2>Scope</h2>
+      <p>
+        This submission accompanies the TTML Live Contribution extensions
+        [[TTML-LIVE]].
+        It describes how TTML Live documents can be carried from node to
+        node using WebSocket [[rfc6455]] connections, and fulfils the
+        requirements for defining a Carriage Mechanism specified in the 
+        TTML Live Contribution extensions [[TTML-LIVE]].
+      </p>
+    </section> <!-- scope -->
+
+    <section id="conformance">
+      <p>
+        Normative text describes indispensable or mandatory elements.
+        It contains the conformance keywords ‘shall’,
+        ‘should’ or ‘may’, defined as follows:
+      </p>
+      <p>
+        <dfn>Shall</dfn>
+        and
+        <dfn>shall not</dfn>:
+        Indicate requirements to be followed strictly
+        and from which no deviation is permitted
+        in order to conform to the document.
+      </p>
+      <p>
+        <dfn>Should</dfn>
+        and
+        <dfn>should not</dfn>:
+        Indicate that, among several possibilities,
+        one is recommended as particularly suitable,
+        without mentioning or excluding others;
+        OR indicate that a certain course of action is
+        preferred but not necessarily required;
+        OR indicate that (in the negative form)
+        a certain possibility or course of action
+        is deprecated but not prohibited.
+      </p>
+      <p>
+        <dfn>May</dfn>
+        and
+        <dfn>need not</dfn>:
+        Indicate a course of action permissible
+        within the limits of the document.
+      </p>
+      <p>
+        <dfn>Default</dfn>
+        identifies mandatory (in phrases containing “shall”)
+        or recommended
+        (in phrases containing “should”) presets that can,
+        optionally, be overwritten by user action
+        or supplemented with other options in advanced applications.
+        Mandatory defaults must be supported.
+        The support of recommended defaults is preferred,
+        but not necessarily required.
+      </p>
+      <p>
+        Informative text is potentially helpful to the user,
+        but it is not indispensable
+        and it does not affect the normative text.
+        Informative text does not contain any conformance keywords.
+      </p>
+      <p>
+        A conformant implementation is one which
+        includes all mandatory provisions (‘shall’)
+        and, if implemented,
+        all recommended provisions (‘should’) as described.
+        A conformant implementation need not implement
+        optional provisions (‘may’)
+        and need not implement them as described.
+      </p>
+    </section> <!-- conformance -->
+
+  <section id="introduction">
+    <h2>Introduction</h2>
+    <p>
+      The TTML Live specification [[TTML-LIVE]] defines the payload data for
+      live subtitling applications,
+      and the requirements for specifying carriage mechanisms for
+      transferring live subtitle sequences between nodes.
+    </p>
+    <p>
+      This document defines one such carriage mechanism,
+      based on the WebSocket protocol.
+      This protocol provides a way to establish TCP socket connections
+      over IP networks in a “web friendly” way that uses
+      HTTP upgrades and has a TLS encryption mode.
+    </p>
+    
+    <figure id="system-model-figure">
+      <img src="images/system-model.svg" alt="">
+      <figcaption>
+        Conceptual diagram illustrating system model
+        of node to node connection using WebSocket over an IP network
+      </figcaption>
+    </figure>
+
+  </section>
+  
+  <section id="definitions">
+    <h2>Definition of terms</h2>
+    <p>
+      Terms defined in TTML Live Contribution Extensions carry the same
+      definitions in this document. Additional terms are defined below:
+    </p>
+    
+    <p><dfn>Live Document</dfn></p>
+    <p>
+      Any entity defined to be a Live Document by a W3C specification.
+    </p>
+
+    <p><dfn>TTML Live Document</dfn></p>
+    <p>
+      A <a>live document</a> that is a TTML Document Instance as defined in
+      [[TTML-LIVE]].
+    </p>
+    
+    <p><dfn>TTML Live sequence</dfn></p>
+    <p>
+      A sequence of <a>TTML Live Documents</a> as defined in [[TTML-LIVE]].
+    </p>
+  </section>
+  
+  <section id="carriage-specification-details">
+    <h2>Carriage Specification Details</h2>
+    <p>
+      WebSocket [[rfc6455]] is a protocol that may be used to transfer a stream of 
+      <a>TTML live documents</a> over an IP network from one node to another.
+    </p>
+    
+    <section id="network-dependencies">
+      <h3>Core networking dependencies and connection protocols</h3>
+      <p>
+        WebSocket carriage is based on TCP socket connections
+        initiated via an HTTP upgrade request.
+      </p>
+      
+      <p>
+        WebSocket does not in itself impose any data rate constraints; 
+        such constraints are imposed by the underlying network infrastructure.
+        Data payloads are delivered in packets of limited size;
+        these do not impact the maximum size of any <a>Live document</a>
+        that can be sent.
+        The TCP protocol ensures that all data is delivered in order.
+        Operational implementations should ensure that there is
+        sufficient data rate capacity available to carry the volume of
+        TTML Live data needed for the application without imposing growing delay.
+      </p>
+      
+      <p>
+        Such a growing delay would manifest as
+        increasingly late availability times of <a>TTML Live documents</a>,
+        which in turn may truncate the visibility
+        of presented text or delay its appearance.
+      </p>
+    </section>
+    
+    <section id="synchronisation-impacts">
+      <h3>Synchronisation impacts and/or thresholds</h3>
+      
+      <p>
+        The latency of WebSocket and TCP socket connections
+        is generally dependent on the network infrastructure used.
+        The protocol guarantees that packets are all delivered,
+        and delivered in the same order in which they were sent.
+        This guarantee can impose transient additional latency
+        if network conditions change.
+        For example failure to receive acknowledgement
+        of delivery of a packet
+        causes further data effectively to be held back
+        until that packet can be successfully delivered.
+      </p>
+      
+      <p>
+        Such an increase in latency would manifest as
+        an increased availability time for <a>TTML Live documents</a>,
+        which in turn may truncate the visibility of presented text
+        or delay its appearance.
+      </p>
+      
+      <p>
+        Techniques available for handling this include
+        careful management of the network conditions,
+        for example setting up static routes
+        or using software defined networks.
+        If such techniques are not locally practical
+        then careful consideration should be given
+        to decide if WebSocket is indeed
+        an appropriate carriage mechanism to use.
+      </p>
+      
+      <p class="note">
+        Other network based protocols
+        such as those based on UDP
+        trade guaranteed delivery for guaranteed latency;
+        in some such protocols it is possible for data loss to occur.
+      </p>
+    </section>
+    
+    <section id="information-security">
+      <h3>Information Security</h3>
+      <p class="introductory">
+        See [[rfc6455]] §10. Security Considerations for further general details.
+      </p>
+      
+      <section id="encryption">
+        <h4>Encryption</h4>
+        <p>
+          Use of the <code>wss:</code> URI (Uniform Resource Identifier)
+          [[rfc3986]] scheme requires the connection
+          to be encrypted using TLS (Transport Layer Security) [[rfc8446]].
+        </p>
+      </section>
+      
+      <section id="authentication">
+        <h4>Authentication</h4>
+        <p>
+          From [[rfc6455]] §10.5 WebSocket Client Authentication:
+        </p>
+        <blockquote>
+          The WebSocket server can use any
+          client authentication mechanism available
+          to a generic HTTP server, such as cookies,
+          HTTP authentication,
+          or TLS authentication.
+        </blockquote>
+      </section>
+      
+      <section id="error-checking">
+        <h4>Error checking and correction</h4>
+        <p>
+          The WebSocket protocol does not offer
+          any inherent error checking and correction.
+          As stated in [[rfc6455]] §10.7 Handling of Invalid Data,
+          both sending and receiving nodes
+          shall validate documents
+          and should close the connection if invalid data is received.
+        </p>
+        
+        <p>
+          To avoid issues with encoding of
+          data with Text data type
+          all documents shall be encoded as UTF-8.
+        </p>
+      </section>
+      
+      <section id="crossing-boundaries">
+        <h4>Crossing organisational boundaries</h4>
+        <p>
+          The WebSocket protocol facilitates
+          transition across organisational boundaries with firewalls etc.
+          by using ports that are commonly open for HTTP;
+          communication can pass through web proxy servers.
+          Use of the secure web socket protocol
+          provides a straightforward to use mechanism
+          for encrypting communication between organisations
+          when the intermediate network is not
+          under direct control of either party,
+          such as the open internet.
+        </p>
+      </section>
+    </section>
+    
+    <section id="endpoint-cardinality">
+      <h3>Endpoint cardinality</h3>
+      <p>
+        WebSocket is a point to point full duplex protocol,
+        with connections being defined by two single end points.
+      </p>
+      
+      <p>
+        Many implementations offer a ‘broadcast’ mode in which
+        multiple connections may be made to or from the same endpoint,
+        and the same data is sent over each connection.
+        Such an implementation could be used to
+        provide a Distributing Node for example.
+      </p>
+      
+      <p>
+        Generally the performance of such implementations is dependent on
+        network capacity and processing power;
+        for TTML Live applications,
+        practical experience shows that small numbers of connections
+        (for example, fewer than 10)
+        do not impose any significant additional latency on current hardware,
+        however care should be taken to ensure that specific applications
+        work in the applicable operational environment.
+      </p>
+      
+      <p>
+        TTML Live requires only unidirectional flow of data.
+        The reverse channel may be used
+        for application specific purposes
+        if and only if both nodes can validate such application specific data;
+        in general this is a risky strategy since
+        unexpected data causes connection closure –
+        see <a href="#connection-lifecycle"></a> below.
+        The reverse channel shall not be used
+        for providing an EBU-TT Live stream back
+        from a Handover Node;
+        such a stream shall be made available using
+        a separate (forward) connection.
+      </p>
+      
+      <p>
+        Implementations should document
+        how many simultaneous connections each node supports.
+      </p>
+      
+      <p>
+        Since connections can be initiated from
+        either the Node that sends <a>TTML Live sequences</a>
+        or a node that receives them,
+        and it is operationally important to know
+        which connection “direction” applies,
+        implementations shall document whether
+        they accept incoming connections
+        or make outgoing connections.
+      </p>
+      
+      <p>
+        A WebSocket Distributing Node that
+        supports incoming connections for both
+        receiving and sending
+        can be used to mediate between
+        implementations that make outgoing connections
+        and those that accept incoming connections
+        by providing a ‘receiving’ incoming connection
+        and offering ‘sending’ connection(s)
+        and passing through documents from one to the other
+        without modifying them. See <a href="#connection-mediation"></a>.
+      </p>
+
+      <figure id="connection-mediation">
+        <img src="images/connection-mediation.svg" alt="">
+        <figcaption>
+          Showing how a Distributing node can be used
+          to mediate between nodes with
+          mutually incompatible connection initiation directions
+        </figcaption>
+      </figure>
+
+      <p>
+        Similarly a “connecting” node can mediate in the other direction
+        by simultaneously making two outgoing connections,
+        one to a “sender” and the other to a “receiver”
+        and passing documents from the sender
+        to the receiver without modifying them.
+      </p>
+    </section>
+    
+    <section id="connection-lifecycle">
+      <h3>Connection lifecycle management</h3>
+      <p>
+        A WebSocket connection is initiated
+        when a node dereferences a URI with a
+        <code>ws:</code>
+        or <code>wss:</code> URI scheme
+        whose address resolves to a second node
+        that supports the WebSocket Protocol,
+        and the WebSocket opening handshake is successfully completed.
+        A WebSocket connection is closed when
+        either node initiates the closing handshake.
+      </p>
+      
+      <p>
+        The WebSocket protocol and underlying TCP layer
+        maintains established connections
+        without further application support being required;
+        no keep-alive messages are required by this carriage mechanism.
+      </p>
+      
+      <p>
+        Nodes should close connections if unexpected
+        or invalid data is received.
+        Implementations shall support <a>TTML Live documents</a>.
+        Implementations shall not close connections
+        if valid TTML live documents are received.
+        Implementations should document
+        any other data formats that they support.</p>
+    </section>
+    
+    <section id="channel-routing">
+      <h3>Channel routing</h3>
+      <p>
+        This carriage mechanism does not specify or recommend
+        any channel routing mechanisms.
+      </p>
+      
+      <p>
+        Various schemes for maintaining and querying registries of,
+        and brokering access to,
+        available data sources
+        (which could be <a>TTML Live sequences</a>) are feasible and in use.
+      </p>
+      
+      <p>
+        It would be reasonable to consider schemes that are
+        either coincident with those intended for wider broadcast applications,
+        such as the AMWA NMOS Discovery & Registration API [[?ANDR-API]],
+        and that are aligned with the
+        EBU-sponsored Joint Taskforce on Networked Media Reference Architecture
+        [[?JT-NM]].
+      </p>
+      
+      <p>
+        Alternatively schemes that are more targeted towards
+        a generic WebSocket infrastructure,
+        such as the Web Application Messaging Protocol [[?WAMP]]
+        may be more appropriate for some applications.
+      </p>
+      
+      <p>
+        One practical operational consideration for implementations is
+        the design of the WebSocket URI.
+        See [[rfc6455]] §12 and [[rfc3986]] for further details.
+        The following examples are illustrative only:
+      </p>
+      
+      <aside class="example">
+        <code>ws://sequence.organisation.tld:port/</code>
+        is a URI that uses the DNS system to resolve the host
+        “<code>sequence.organisation.tld</code>” at port 
+        “<code>port</code>” to a single specified sequence.
+      </aside>
+      
+      <aside class="example">
+        <code>ws://organisation.tld:port/sequence</code>
+        is a URI that uses the DNS system to resolve the host
+        “<code>organisation.tld</code>” at port “<code>port</code>”
+        which may offer multiple resources
+        (some of which may offer <a>TTML Live sequences</a>),
+        and requests the specific resource “<code>sequence</code>”.
+      </aside>
+      <aside class="example">
+        <code>ws://organisation.tld:port/sequence/subscribe</code>
+        might be a URI that uses the DNS system to resolve the host
+        “<code>organisation.tld</code>” at port “<code>port</code>”,
+        and requests a subscription to the resource “<code>sequence</code>”.
+        An alternative but not equivalent formulation of this URI could be
+        <code>ws://organisation.tld:port/sequence?subscribe</code>
+      </aside>
+      <aside class="example">
+        <code>ws://organisation.tld:port/sequence/publish</code>
+        might be a URI that uses the DNS system to resolve the host
+        “<code>organisation.tld</code>” at port “<code>port</code>”,
+        and requests to publish data matching the resource
+        “<code>sequence</code>”,
+        i.e to provide that data to any subscribers.
+        An alternative but not equivalent formulation of this URI could be
+        <code>ws://organisation.tld:port/sequence?publish</code>
+      </aside>
+      <aside class="example">
+        <code>ws://1.2.3.4:9000/</code>
+        is a URI that specifies a specific IP address
+        and port without requiring resolution using the DNS system.
+      </aside>
+      
+      <section id="sequence-id-uri">
+        <h4>Sequence Identifier Encoding in URIs</h4>
+        <p>
+          The data type of <code>ebuttp:sequenceIdentifier</code> is
+          <code>xs:string</code> with a minimum length of 1.
+          It can therefore contain characters that are reserved in URIs,
+          as defined in [[rfc3986]] §2.2.
+        </p>
+        <p>
+          Prior to inserting into a URI the sequence identifier
+          shall be percent-encoded exactly once.
+          On extraction from a URI, and prior to use as a sequence identifier,
+          the value shall be percent-decoded exactly once.
+        </p>
+      </section>
+    </section>
+    
+    <section id="stability">
+      <h3>Stability</h3>
+      <p>
+        WebSocket and TCP guarantee delivery of data
+        in the same order in which it was sent
+        at the expense of latency if required.
+      </p>
+      
+      <p>
+        Constant latency can only be achieved by managing
+        the underlying network infrastructure.
+      </p>
+      
+      <p>
+        Given a reliable network infrastructure
+        a connection remains open indefinitely
+        until either node closes it.
+      </p>
+    </section>
+  </section>
+  </body>
+</html>
