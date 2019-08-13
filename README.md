@@ -1,7 +1,9 @@
 
 # TTML Live Extensions Module
 
-This repository contains the following documents for the TTML Live Extensions module, carriage of TTML Live documents over WebSocket, and 
+This repository contains the following documents for the TTML Live Extensions module, carriage of TTML Live documents over WebSocket, and guidance for using TTML Live.
+
+TTML Live is a set of extensions to TTML that facilitate contribution of streams of TTML from author to a distribution encoder; TTML Live content is _not_ generally intended for widespread distribution, where existing distribution formats such as [IMSC](https://www.w3.org/TR/ttml-imsc/all/) are more appropriate.
 
 ## TTML Live Extensions Module 1.0
 
