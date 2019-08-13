@@ -13,7 +13,7 @@ Editor's Draft: https://w3c.github.io/tt-module-live/tt-live-1/spec/tt-live.html
 
 Recommendation Track document.
 
-Editor's Draft: https://w3c.github.io/tt-module-live/tt-live-1/spec/carriage/tt-live-carriage-WebSocket.html
+Editor's Draft: https://w3c.github.io/tt-module-live/tt-live-1/spec/carriage/WebSocket/tt-live-carriage-WebSocket.html
 
 ## TTML Live Extensions Guide
 
