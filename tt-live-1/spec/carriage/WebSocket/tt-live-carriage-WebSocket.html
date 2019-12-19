@@ -514,14 +514,14 @@
       </p>
       
       <aside class="example">
-        <code>ws://sequence.organisation.tld:port/</code>
+        <code>wss://sequence.organisation.tld:port/</code>
         is a URI that uses the DNS system to resolve the host
         “<code>sequence.organisation.tld</code>” at port 
         “<code>port</code>” to a single specified sequence.
       </aside>
       
       <aside class="example">
-        <code>ws://organisation.tld:port/sequence</code>
+        <code>wss://organisation.tld:port/sequence</code>
         is a URI that uses the DNS system to resolve the host
         “<code>organisation.tld</code>” at port “<code>port</code>”
         which may offer multiple resources
@@ -529,25 +529,25 @@
         and requests the specific resource “<code>sequence</code>”.
       </aside>
       <aside class="example">
-        <code>ws://organisation.tld:port/sequence/subscribe</code>
+        <code>wss://organisation.tld:port/sequence/subscribe</code>
         might be a URI that uses the DNS system to resolve the host
         “<code>organisation.tld</code>” at port “<code>port</code>”,
         and requests a subscription to the resource “<code>sequence</code>”.
         An alternative but not equivalent formulation of this URI could be
-        <code>ws://organisation.tld:port/sequence?subscribe</code>
+        <code>wss://organisation.tld:port/sequence?subscribe</code>
       </aside>
       <aside class="example">
-        <code>ws://organisation.tld:port/sequence/publish</code>
+        <code>wss://organisation.tld:port/sequence/publish</code>
         might be a URI that uses the DNS system to resolve the host
         “<code>organisation.tld</code>” at port “<code>port</code>”,
         and requests to publish data matching the resource
         “<code>sequence</code>”,
         i.e to provide that data to any subscribers.
         An alternative but not equivalent formulation of this URI could be
-        <code>ws://organisation.tld:port/sequence?publish</code>
+        <code>wss://organisation.tld:port/sequence?publish</code>
       </aside>
       <aside class="example">
-        <code>ws://1.2.3.4:9000/</code>
+        <code>wss://1.2.3.4:9000/</code>
         is a URI that specifies a specific IP address
         and port without requiring resolution using the DNS system.
       </aside>
