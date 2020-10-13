@@ -6,11 +6,11 @@ far. The idea is that the documents can be carried from A to B over any
 mechanism that is adequately well specified. For example WebSocket or the file
 system would both work.
 
-The IETF payload specification for TTML in RTP [1] defines the RTP packet
+The IETF payload specification for TTML in RTP [1], RFC8759, defines the RTP packet
 format for wrapping TTML documents, with the idea that they can be streamed
 live over UDP.
 
-[1] https://datatracker.ietf.org/doc/draft-ietf-payload-rtp-ttml/
+[1] https://tools.ietf.org/html/rfc8759
 
 The question arises, can a TTML document using the Live extensions be carried
 over RTP, and how does the document time resolution algorithms interact with
